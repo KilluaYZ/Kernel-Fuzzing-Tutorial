@@ -1,0 +1,116 @@
+// Copyright 2018 syzkaller project authors. All rights reserved.
+// Use of this source code is governed by Apache 2 LICENSE that can be found in the LICENSE file.
+
+package vcs
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+
+	"github.com/google/syzkaller/pkg/osutil"
+)
+
+type fuchsia struct {
+	dir  string
+	repo *git
+}
+
+func newFuchsia(dir string, opts []RepoOpt) *fuchsia {
+	return &fuchsia{
+		dir:  dir,
+		repo: newGit(dir, nil, opts),
+	}
+}
+
+func (ctx *fuchsia) Poll(repo, branch string) (*Commit, error) {
+	if repo != "https://fuchsia.googlesource.com/fuchsia" || (branch != "main" && branch != "master") {
+		// Fuchsia ecosystem is hard-wired to the main repo + branch.
+		// The 'master' branch is a mirror of 'main'.
+		return nil, fmt.Errorf(
+			"fuchsia: can only check out 'main' or 'master' branch of https://fuchsia.googlesource.com/fuchsia",
+		)
+	}
+	if _, err := runSandboxed(ctx.dir, "./.jiri_root/bin/jiri", "update"); err != nil {
+		if err := ctx.initRepo(); err != nil {
+			return nil, err
+		}
+	}
+	return ctx.repo.Commit(HEAD)
+}
+
+func (ctx *fuchsia) initRepo() error {
+	if err := os.RemoveAll(ctx.dir); err != nil {
+		return fmt.Errorf("failed to remove repo dir: %w", err)
+	}
+	tmpDir := ctx.dir + ".tmp"
+	if err := osutil.MkdirAll(tmpDir); err != nil {
+		return fmt.Errorf("failed to create repo dir: %w", err)
+	}
+	defer os.RemoveAll(tmpDir)
+	if err := osutil.SandboxChown(tmpDir); err != nil {
+		return err
+	}
+	cmd := "curl -s 'https://fuchsia.googlesource.com/fuchsia/+/main/scripts/bootstrap?format=TEXT' |" +
+		"base64 --decode | bash"
+	if _, err := runSandboxed(tmpDir, "bash", "-c", cmd); err != nil {
+		return err
+	}
+	return osutil.Rename(filepath.Join(tmpDir, "fuchsia"), ctx.dir)
+}
+
+func (ctx *fuchsia) CheckoutBranch(repo, branch string) (*Commit, error) {
+	return nil, fmt.Errorf("not implemented for fuchsia: CheckoutBranch")
+}
+
+func (ctx *fuchsia) CheckoutCommit(repo, commit string) (*Commit, error) {
+	return nil, fmt.Errorf("not implemented for fuchsia: CheckoutCommit")
+}
+
+func (ctx *fuchsia) SwitchCommit(commit string) (*Commit, error) {
+	return nil, fmt.Errorf("not implemented for fuchsia: SwitchCommit")
+}
+
+func (ctx *fuchsia) Commit(com string) (*Commit, error) {
+	return nil, fmt.Errorf("not implemented for fuchsia: Commit")
+}
+
+func (ctx *fuchsia) GetCommitByTitle(title string) (*Commit, error) {
+	return ctx.repo.GetCommitByTitle(title)
+}
+
+func (ctx *fuchsia) GetCommitsByTitles(titles []string) ([]*Commit, []string, error) {
+	return ctx.repo.GetCommitsByTitles(titles)
+}
+
+func (ctx *fuchsia) ExtractFixTagsFromCommits(baseCommit, email string) ([]*Commit, error) {
+	return ctx.repo.ExtractFixTagsFromCommits(baseCommit, email)
+}
+
+func (ctx *fuchsia) ReleaseTag(commit string) (string, error) {
+	return "", fmt.Errorf("not implemented for fuchsia: ReleaseTag")
+}
+
+func (ctx *fuchsia) Contains(commit string) (bool, error) {
+	return false, fmt.Errorf("not implemented for fuchsia: Contains")
+}
+
+func (ctx *fuchsia) ListCommitHashes(base string) ([]string, error) {
+	return ctx.repo.ListCommitHashes(base)
+}
+
+func (ctx *fuchsia) Object(name, commit string) ([]byte, error) {
+	return ctx.repo.Object(name, commit)
+}
+
+func (ctx *fuchsia) MergeBases(firstCommit, secondCommit string) ([]*Commit, error) {
+	return ctx.repo.MergeBases(firstCommit, secondCommit)
+}
+
+func (ctx *fuchsia) CommitExists(string) (bool, error) {
+	return false, fmt.Errorf("not implemented for fuchsia: CommitExists")
+}
+
+func (ctx *fuchsia) PushCommit(repo, commit string) error {
+	return fmt.Errorf("not implemented for fuchsia: PushCommit")
+}

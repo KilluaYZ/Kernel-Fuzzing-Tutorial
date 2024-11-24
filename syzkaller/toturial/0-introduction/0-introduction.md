@@ -53,10 +53,10 @@ read(r0, &(0x7f0000000000), 42)
 close(r0)
 ```
 
-在`syzkaller`实际修改程序的时候，它使用的是内存中的类似AST的表达方式，这中表达方式由Call和Arg组成，它们在[prog/prog.go](/syzkaller/syzkaller/prog/prog.go)中定义。Call表示一个系统调用，Arg表示一个参数。Call和Arg都有一些字段，它们用于表示参数类型，参数值，参数值范围等。被用于[analyze](/syzkaller/syzkaller/prog/analysis.go), [generate](/syzkaller/syzkaller/prog/rand.go), [mutate](/syzkaller/syzkaller/prog/mutation.go),
-[minimize](/syzkaller/syzkaller/prog/minimization.go), [validate](/syzkaller/syzkaller/prog/validation.go)等。
+在`syzkaller`实际修改程序的时候，它使用的是内存中的类似AST的表达方式，这中表达方式由Call和Arg组成，它们在[prog/prog.go](/syzkaller/src/prog/prog.go)中定义。Call表示一个系统调用，Arg表示一个参数。Call和Arg都有一些字段，它们用于表示参数类型，参数值，参数值范围等。被用于[analyze](/syzkaller/src/prog/analysis.go), [generate](/syzkaller/src/prog/rand.go), [mutate](/syzkaller/src/prog/mutation.go),
+[minimize](/syzkaller/src/prog/minimization.go), [validate](/syzkaller/syzkaller/prog/validation.go)等。
 
-这种存储在内存中的结构可以使用代码[transformed](/syzkaller/syzkaller/prog/encoding.go)转化成为人类可以阅读的格式，也可以反过来。
+这种存储在内存中的结构可以使用代码[transformed](/syzkaller/src/prog/encoding.go)转化成为人类可以阅读的格式，也可以反过来。
 
-除了以上两种格式之外，还有另一个[binary representation](/syzkaller/syzkaller/prog/decodeexec.go)， 这是一种更加轻便简洁的格式，它不包含太多的信息，但是它足够用于执行程序，被用于[syz-executor](/syzkaller/syzkaller/executor/executor.cc)的实际执行。
+除了以上两种格式之外，还有另一个[binary representation](/syzkaller/src/prog/decodeexec.go)， 这是一种更加轻便简洁的格式，它不包含太多的信息，但是它足够用于执行程序，被用于[syz-executor](/syzkaller/src/executor/executor.cc)的实际执行。
 
