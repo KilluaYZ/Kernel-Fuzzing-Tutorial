@@ -118,3 +118,8 @@ Syzkaller是一个coverage-guided的fuzzer。具体来说他用了LLVM的[Saniti
     与代码行相关联的PC值不会被测量，或者源代码行根本不会生成代码。
 
     ![](./images/9-coverage_not_instrumented.png)
+
+## syz-cover
+
+syzkaller提供了一个很好用的工具[syz-cover](/fuzzer/syzkaller/src/tools/syz-cover/syz-cover.go)，用它可以根据未处理的覆盖数据（raw coverage data）生成一个覆盖情况报告。
+使用方法可以参考[coverage](/fuzzer/syzkaller/src/docs/coverage.md)。
