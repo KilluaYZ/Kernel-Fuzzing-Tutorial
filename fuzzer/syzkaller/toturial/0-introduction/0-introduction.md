@@ -70,26 +70,36 @@ close(r0)
 
 Syzkaller是一个coverage-guided的fuzzer。具体来说他用了LLVM的[Sanitizer Coverage (tracing mode)](https://clang.llvm.org/docs/SanitizerCoverage.html#tracing-pcs)和[KCOV](https://www.kernel.org/doc/html/latest/dev-tools/kcov.html)来收集覆盖情况。值得注意的是，现在`gcc`也是可以用`Sanitizer Coverage`的。
 
-编译期间，编译器会向每一个[Basic Block](https://en.wikipedia.org/wiki/Basic_block)或[CFG edge](https://en.wikipedia.org/wiki/Control-flow_graph)中插入一段代码，这段代码就是一个覆盖点(Coverage Point)，当程序执行到这个点时，就会记录下来。（其中覆盖点的粒度是Basic Block还是CFG edge与编译器有关。例如`clang`的粒度是CFG edge，而`gcc`的粒度是Basic Block）。
-覆盖点的插入是放在编译的中后期进行的，这个时候，编译器已经执行了很多的优化 Pass，所以最后我们的覆盖点和源码联系并不紧密。比如，你可能会发现有一行代码被覆盖了，但是他的上一行没有被覆盖。但是，覆盖率仍然提供了一个很有用的信息，可以让我们了解fuzzing的全局情况，但是我们还是要对其保持怀疑，不能太依赖。
+编译期间，编译器会向每一个[Basic Block](https://en.wikipedia.org/wiki/Basic_block)
+或[CFG edge](https://en.wikipedia.org/wiki/Control-flow_graph)中插入一段代码，这段代码就是一个覆盖点(Coverage Point)，
+当程序执行到这个点时，就会记录下来。（其中覆盖点的粒度是Basic Block还是CFG edge与编译器有关。例如`clang`的粒度是CFG edge，
+而`gcc`的粒度是Basic Block）。
+覆盖点的插入是放在编译的中后期进行的，这个时候，编译器已经执行了很多的优化 Pass，
+所以最后我们的覆盖点和源码联系并不紧密。比如，你可能会发现有一行代码被覆盖了，但是他的上一行没有被覆盖。
+但是，覆盖率仍然提供了一个很有用的信息，可以让我们了解fuzzing的全局情况，但是我们还是要对其保持怀疑，不能太依赖。
 
 ## Web Interface
 
-我们可以在syzkaller的web界面中查看覆盖率。进入到web界面之后，会看到面板中有一个coverage字段，点击该字段后面的数字，会跳转到一个页面，这个页面就是覆盖率的页面。
+我们可以在syzkaller的web界面中查看覆盖率。进入到web界面之后，会看到面板中有一个coverage字段，点击该字段后面的数字，
+会跳转到一个页面，这个页面就是覆盖率的页面。
 
 ![Coverage Overview](./images/2-coverage-overview.png)
 
-从中我们就可以了解到fuzzing的全局情况，例如，哪些文件被覆盖到，覆盖率是多少，哪些文件没有被覆盖到。我们还可以点击文件名，查看该文件的覆盖率情况。以pkeys.c为例：
+从中我们就可以了解到fuzzing的全局情况，例如，哪些文件被覆盖到，覆盖率是多少，哪些文件没有被覆盖到。
+我们还可以点击文件名，查看该文件的覆盖率情况。以pkeys.c为例：
 
 ![Coverage Detail](./images/3-pkeys-coverage-detail.png)
 
 该界面会展示pkeys.c的源码，并且用不同的颜色表示不同的覆盖率。
 
-> 注意：我们的一行源码经过编译后，可能会被翻译成多条机器指令，每一条指令对应一个程序计数器（Program Counter，简称PC）,这是一种处理器中的寄存器，它用于存储当前正在执行的指令的地址或指针。所以后面提到的与该行相关的PC值，就是指该行源码对应的机器指令的PC值。
+> 注意：我们的一行源码经过编译后，可能会被翻译成多条机器指令，每一条指令对应一个程序计数器（Program Counter，简称PC）,
+> 这是一种处理器中的寄存器，它用于存储当前正在执行的指令的地址或指针。所以后面提到的与该行相关的PC值，
+> 就是指该行源码对应的机器指令的PC值。
 
 - 黑色：完全覆盖
    
-   所有与该行相关的PC值都被覆盖。左侧有一个数字，表示有多少个程序执行了与这行相关的PC值。你可以点击那个数字，它会打开最后执行的程序。
+   所有与该行相关的PC值都被覆盖。左侧有一个数字，表示有多少个程序执行了与这行相关的PC值。
+   你可以点击那个数字，它会打开最后执行的程序。
 
    ![](./images/4-coverage-program.png)
 
@@ -97,13 +107,16 @@ Syzkaller是一个coverage-guided的fuzzer。具体来说他用了LLVM的[Saniti
 
 - 橘色：有些覆盖有些没覆盖
 
-    有几个PC值与该行相关联，但不是所有这些都被执行。同样，源代码行的左边还有一个数字，可以单击以打开触发相关PC值的最后一个程序。
+    有几个PC值与该行相关联，但不是所有这些都被执行。同样，源代码行的左边还有一个数字，
+    可以单击以打开触发相关PC值的最后一个程序。
 
     ![](./images/6-coverage_both.png)
 
 - 深红色：弱未覆盖
 
-    函数（符号）这一行没有任何覆盖。也就是说，函数根本不会被执行。请注意，如果编译器已经优化了某些符号，并使代码内联，那么与这一行相关联的符号就是代码被编译成的那个符号。这使得有时很难弄清楚着色的含义。
+    函数（符号）这一行没有任何覆盖。也就是说，函数根本不会被执行。
+    请注意，如果编译器已经优化了某些符号，并使代码内联，那么与这一行相关联的符号就是代码被编译成的那个符号。
+    这使得有时很难弄清楚着色的含义。
 
     ![](./images/7-coverage_weak-uncovered.png)
 
@@ -121,5 +134,66 @@ Syzkaller是一个coverage-guided的fuzzer。具体来说他用了LLVM的[Saniti
 
 ## syz-cover
 
-syzkaller提供了一个很好用的工具[syz-cover](/fuzzer/syzkaller/src/tools/syz-cover/syz-cover.go)，用它可以根据未处理的覆盖数据（raw coverage data）生成一个覆盖情况报告。
+syzkaller提供了一个很好用的工具[syz-cover](/fuzzer/syzkaller/src/tools/syz-cover/syz-cover.go)，
+用它可以根据未处理的覆盖数据（raw coverage data）生成一个覆盖情况报告。
 使用方法可以参考[coverage](/fuzzer/syzkaller/src/docs/coverage.md)。
+
+# Crash Report 
+
+syzkaller在运行过程中，如果发现程序崩溃，会生成一个crash report，然后将crash信息保存到`workdir/crashes`中。
+该目录中包含了若干个子目录，每一个子目录都是一个唯一的crash类型。
+每一个子目录中都有`description`文件，它存储了唯一的id，可以用来区分每一个crash，
+同时目录中还存储了`logN`和`reportN`，每一对都是一个crash report。以下是crashes目录的示例：
+
+```
+ - crashes/
+   - 6e512290efa36515a7a27e53623304d20d1c3e
+     - description
+     - log0
+     - report0
+     - log1
+     - report1
+     ...
+   - 77c578906abe311d06227b9dc3bffa4c52676f
+     - description
+     - log0
+     - report0
+     ...
+```
+`logN`和`reportN`是成对出现的，它们描述了同一个crash，在syzkaller中，一个crash类型的目录里最多会保存100对`logN`和`reportN`。
+`logN`文件包含了syzkaller运行时的日志，以及Kernel的输出。这些log可以交给`syz-repro`工具，他能够进行crash定位以及最小化（[crash location and minimization](/fuzzer/syzkaller/src/docs/reproducing_crashes.md)）。`syz-execprog`也是一个有用的工具，他能够通过这些日志进行crash人工定位（[manual localization](/fuzzer/syzkaller/src/docs/executing_syzkaller_programs.md)）。
+`reportN`文件包含了处理后的以及符号化后的内核crash报告（比如，KASAN报告）。
+
+
+在所有的crash类型中，有3中类型比较特别，这三类crash通常不会被记录到report中，如果遇到了可能是`syzkaller`的bug。
+
+ - `no output from test machine`: 虚拟机完全没有输出。
+  
+ - `lost connection to test machine`: 与虚拟机的ssh连接意外断开。
+  
+ - `test machine is not executing programs`: 虚拟机还在运行，但是很久没有执行测试程序了
+
+## Reproducing Crashes
+
+尽管syzkaller可以自动地重现bug，但是这个重现不够完美，所以syzkaller提供了一些工具，
+能够让用户手动执行程序，重现bug。
+
+在fuzzing过程中，syzkaller在 workdir/crashes 目录中创建的崩溃日志包含了崩溃前执行的程序。在并行执行模式下（当syz-manager配置中的 procs 参数设置为大于1的值时），导致崩溃的程序不一定立即出现在崩溃之前；有问题的程序可能在日志中的某个地方。有两个工具可以帮助我们识别并最小化导致崩溃的程序：tools/syz-execprog 和 tools/syz-prog2c。
+
+`tools/syz-execprog` 会执行一个syzkaller的种子（一个包含了一系列syscall的程序）。
+以下命令是syz-execprog的用法：
+
+``` bash
+./syz-execprog -executor=./syz-executor -repeat=0 -procs=16 -cover=0 crash-log
+```
+
+一旦你得到一个能够导致crash的种子程序，你可以尝试进一步地最小化它，比如删除程序中的一些无关syscall。最小化之后的程序还应该去执行一下，看看它能否触发crash。
+运行的命令可以参考：
+
+``` bash
+./syz-execprog -threaded=0 -collide=0
+```
+
+确定没有问题了，就可以使用`syz-prog2c`工具，将种子程序转化为一个可以执行的c语言程序。只要之前的种子程序在`syz-execprog`使用了参数`-threaded/collide=0`运行都能够复现crash，
+那么转化后得到的c语言程序也能够稳定地复现。
+
