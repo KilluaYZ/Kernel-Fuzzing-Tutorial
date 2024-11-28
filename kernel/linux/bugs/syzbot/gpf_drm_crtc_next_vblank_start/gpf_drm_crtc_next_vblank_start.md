@@ -6,3 +6,4 @@ fix commit:  6f1ccbf07453 drm/vblank: [Fix for drivers that do not drm_vblank_in
 
 introduce commit: d39e48ca80c0960b039cb38633957f0040f63e1a [drm/atomic-helper: Set fence deadline for vblank](https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d39e48ca80c0960b039cb38633957f0040f63e1a)
 
+影响范围：6.3-6.12
