@@ -1,5 +1,8 @@
-# KASAN: use-after-free Read in netdev_unregister_kobject
-
+---
+title: syzbot上KASAN_use-after-free Read in netdev_unregister_kobject
+date: 2024-12-27 14:44:00
+tags: [linux]
+---
 > https://syzkaller.appspot.com/bug?extid=6cf5652d3df49fae2e3f
 
 

@@ -1,4 +1,8 @@
-# general protection fault in drm_crtc_next_vblank_start
+---
+title: syzbot上general protection fault in drm_crtc_next_vblank_start
+date: 2024-12-27 14:44:00
+tags: [linux]
+---
 
 地址：https://syzkaller.appspot.com/bug?extid=54280c5aea19802490b5
 

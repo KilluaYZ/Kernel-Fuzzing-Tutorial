@@ -1,4 +1,8 @@
-<h1 style="display: flex; justify-content: center">Linux内核调试</h1>
+---
+title: Linux内核调试
+date: 2024-12-27 14:44:00
+tags: [linux, kvm, qemu]
+---
 
 > 本章内容主要介绍如何使用gdb+qemu进行linux内核的调试
 > 参考https://www.cnblogs.com/alantu2018/p/8997149.html

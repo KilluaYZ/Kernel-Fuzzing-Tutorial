@@ -1,4 +1,8 @@
-<h1 style="display: flex; justify-content: center; align-items: center; font-size: 30px; font-weight: bold; color: #fff; margin-bottom: 20px;">Syzkaller 介绍</h1>
+---
+title: Syzkaller 介绍
+date: 2024-12-27 14:44:00
+tags: [linux, syzkaller]
+---
 
 [TOC]
 

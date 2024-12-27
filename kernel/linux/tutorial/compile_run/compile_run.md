@@ -1,7 +1,10 @@
-# Linux 内核的编译与运行
+---
+title: Linux 内核的编译与运行
+date: 2024-12-27 14:44:00
+tags: [linux, kvm, qemu]
+---
 
 # 获取源码
-
 
 ## linux版本介绍
 

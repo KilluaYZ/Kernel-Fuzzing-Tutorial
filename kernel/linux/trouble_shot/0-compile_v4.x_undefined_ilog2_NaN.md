@@ -1,3 +1,9 @@
+---
+title: 在编译linux内核v4.x错误undefined reference to `____ilog2_NaN'
+date: 2024-12-27 14:44:00
+tags: [linux]
+---
+
 > 参考：https://nuoye-blog.github.io/2020/08/21/dcb8d699/
 
 # 问题描述

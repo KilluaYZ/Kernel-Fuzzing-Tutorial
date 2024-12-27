@@ -1,3 +1,9 @@
+---
+title: DRM介绍
+date: 2024-12-27 14:44:00
+tags: [linux, linux driver]
+---
+
 # DRM介绍
 
 > 搬运：https://doc.embedfire.com/linux/rk356x/linux_base/zh/latest/linux_app/drm/drm.html
