@@ -111,7 +111,6 @@ index 41446668ccce..d5677d39c1e4 100644
 patch -i patch.diff
 ```
 
-输入之后，终端会让你输入文件路径，会输入两次，分别输入`include/linux/log2.h`
-和`tools/include/linux/log2.h`即可。
+输入之后，终端会让你输入文件路径，会输入两次，分别输入`include/linux/log2.h`和`tools/include/linux/log2.h`即可。
 
 打好补丁重新编译，就可以发现问题解决啦~
