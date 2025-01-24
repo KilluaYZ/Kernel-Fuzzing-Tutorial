@@ -147,12 +147,12 @@ html_theme = "sphinx_book_theme"
 
 # https://sphinx-book-theme.readthedocs.io/en/stable/reference.html
 html_theme_options = {
-    "repository_url": "https://github.com/nixos/nix.dev",
-    "repository_branch": "master",
+    "repository_url": "https://github.com/KilluaYZ/Kernel-Fuzzing-Tutorial",
+    "repository_branch": "main",
     "path_to_docs": "source",
     "use_repository_button": True,
     "use_issues_button": True,
-    "use_edit_page_button": True,
+    "use_edit_page_button": False,
     "show_navbar_depth": 2,
 }
 
