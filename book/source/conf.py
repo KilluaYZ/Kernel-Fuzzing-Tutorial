@@ -78,9 +78,12 @@ source_suffix = ".md"
 master_doc = "index"
 
 # General information about the project.
-project = "nix.dev"
-author = "the <a href=\"https://nixos.org/community/teams/documentation\">Nix documentation team</a> and contributors."
-copyright = "2016-" + str(date.today().year) + ", NixOS Foundation"
+# project = "nix.dev"
+# author = "the <a href=\"https://nixos.org/community/teams/documentation\">Nix documentation team</a> and contributors."
+# copyright = "2016-" + str(date.today().year) + ", NixOS Foundation"
+project = "Kernel Fuzzing Tutorial"
+author = "Killuayz"
+copyright = ""
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
