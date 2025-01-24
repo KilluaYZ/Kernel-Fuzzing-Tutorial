@@ -3,5 +3,6 @@ build/
 extracted/
 requirements_frozen.txt
 result
+result*/
 source/_ext/__pycache__/
 .netlify

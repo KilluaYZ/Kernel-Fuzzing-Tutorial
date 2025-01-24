@@ -1,6 +1,0 @@
-{
-    "files.associations": {
-        "cdev.h": "c",
-        "io.h": "c"
-    }
-}
