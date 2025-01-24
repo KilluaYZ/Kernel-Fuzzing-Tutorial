@@ -3,9 +3,9 @@
 
 ```{toctree}
 :glob:
-:maxdepth: 3
+:maxdepth: 1
 
-CVE-2024-50274.md
-gpf_drm_crtc_next_vblank_start.md
-uaf_netdev_unregister_kobject.md
+cve/CVE-2024-50274/CVE-2024-50274.md
+syzbot/gpf_drm_crtc_next_vblank_start/gpf_drm_crtc_next_vblank_start.md
+syzbot/uaf_netdev_unregister_kobject/uaf_netdev_unregister_kobject.md
 ```
