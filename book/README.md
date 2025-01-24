@@ -1,9 +1,6 @@
-<img alt="CI"
-     src="https://github.com/nix-dot-dev/nix.dev/workflows/CI/badge.svg">
+# Kernel Fuzzing Book
 
-# [nix.dev](https://nix.dev)
-
-Notes about things about Kernel Fuzzing
+Notes about things about Kernel Fuzzing. The template is forked from [nix.dev](https://nix.dev)
 
 ## Contributing
 
