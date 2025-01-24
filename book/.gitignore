@@ -1,0 +1,7 @@
+.direnv/
+build/
+extracted/
+requirements_frozen.txt
+result
+source/_ext/__pycache__/
+.netlify
