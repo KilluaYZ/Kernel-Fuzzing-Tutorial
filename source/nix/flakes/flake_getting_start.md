@@ -147,12 +147,12 @@ experimental-features = nix-command flakes
 
 可以首先使用官方提供的模板来学习 flake 的编写，先查下有哪些模板：
 
-```nix
+```shell
 nix flake show templates
 ```
 其中有个 `templates#full` 模板展示了所有可能的用法，可以看看它的内容：
 
-```nix
+```shell
 nix flake init -t templates#full
 cat flake.nix
 ```

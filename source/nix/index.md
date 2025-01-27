@@ -44,6 +44,17 @@ Explanations of history and ideas in the Nix ecosystem
 :::
 ::::
 
+::::{grid} 2
+:::{grid-item-card} Flakes
+:link: flakes
+:link-type: ref
+:text-align: center
+
+Introduction to Flakes.
+:::
+
+::::
+
 ## What can you do with Nix?
 
 The following list illustrates some of what can be achieved with the Nix ecosystem:
@@ -91,6 +102,7 @@ tutorials/index.md
 guides/index.md
 reference/index.md
 concepts/index.md
+flakes/index.md
 contributing/index.md
 acknowledgments/index.md
 ```
