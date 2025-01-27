@@ -2,8 +2,11 @@
 # Flakes Introduction
 
 > 参考文章，侵权必删： 
+> 
 > [1] https://xeiaso.net/blog/nix-flakes-1-2022-02-21/
+> 
 > [2] https://nixos-and-flakes.thiscute.world/zh/
+> 
 > [3] https://wiki.nixos.org/wiki/Flakes
 
 ## 为什么引入Flake
@@ -27,9 +30,9 @@ Nix 于 2020 年推出了 `nix-command` & `flakes` 两个实验特性，它们�
 这里列举下在启用了 New CLI 与 Flakes(`nix-command` & `flakes`) 实验特性后，已经不需要用到的旧的 Nix 命令行工具与相关概念。在查找资料时，如果看到它们直接忽略掉就行（`nix-collect-garbage` 除外，该命令目前暂无替代）：
 
 |Old CLI|New CLI|
-|--|--|--|
+|--|--|
 |`nix-channel`: 与 apt/yum/pacman 等其他 Linux 发行版的包管理工具类似，传统的 Nix 也以 stable/unstable/test 等 channel 的形式来管理软件包的版本，可通过此命令修改 Nix 的 channel 信息。| Nix Flakes 在 `flake.nix` 中通过 `inputs` 声明依赖包的数据源，通过 `flake.lock` 锁定依赖版本，完全取代掉了 `nix-channel` 的功能。 |
-| `nix-env`: 用于管理用户环境的软件包，是传统 Nix 的核心命令行工具。它从 nix-channel 定义的数据源中安装软件包，所以安装的软件包版本受 channel 影响。 | New CLI 中对应的命令为 nix profile，我个人不太推荐初学者直接尝试它。因为通过 nix-env 安装的包不会被自动记录到 Nix 的声明式配置中，是完全脱离掌控的，无法在其他主机上复现，因此不推荐使用。|
-| `nix-shell`: 用于创建一个临时的 shell 环境 | 这玩意儿可能有点复杂了，因此在 New CLI 中它被拆分成了三个子命令 `nix develop,` `nix shell` 以及 `nix run`|
+| `nix-env`: 用于管理用户环境的软件包，是传统 Nix 的核心命令行工具。它从 nix-channel 定义的数据源中安装软件包，所以安装的软件包版本受 channel 影响。 | New CLI 中对应的命令为 `nix profile`，我个人不太推荐初学者直接尝试它。因为通过 `nix-env` 安装的包不会被自动记录到 Nix 的声明式配置中，是完全脱离掌控的，无法在其他主机上复现，因此不推荐使用。|
+| `nix-shell`: 用于创建一个临时的 `shell` 环境 | 这玩意儿可能有点复杂了，因此在 New CLI 中它被拆分成了三个子命令 `nix develop,` `nix shell` 以及 `nix run`|
 |`nix-build`: 用于构建 Nix 包，它会将构建结果放到 `/nix/store` 路径下，但是不会记录到 Nix 的声明式配置中。 | 在 New CLI 中对应的命令为 `nix build` |
 |`nix-collect-garbage`: 垃圾回收指令，用于清理 `/nix/store` 中未被使用的 Store Objects. | 在 New CLI 中有个相似的指令 `nix store gc --debug`，但它不会清理 profile 生成的历史版本，因此此命令暂无替代。|

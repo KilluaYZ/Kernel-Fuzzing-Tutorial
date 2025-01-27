@@ -11,7 +11,7 @@ tags: [linux]
 
 在编译linux内核v4.x的时候出现错误：
 
-```shell
+```console
 kernel/built-in.o: In function `update_wall_time':
 /home/ubn/linux/linux-4.8.13/kernel/time/timekeeping.c:2079: undefined reference to `____ilog2_NaN'
 Makefile:951: recipe for target 'vmlinux' failed
