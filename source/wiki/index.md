@@ -8,4 +8,5 @@
 :maxdepth: 1
 
 drm/drm.md
+nix_with_glibc_compile_error.md
 ```

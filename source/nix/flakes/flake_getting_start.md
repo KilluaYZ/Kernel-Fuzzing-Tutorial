@@ -171,7 +171,7 @@ inputs = {
 - `<flake>`是一个flake的名字，例如"nixpkgs"
 - `store-path`是一个`/nix/store...`目录
 
-下面是一个`outputs`的示例：
+下面是一个`outputs`中保留的特殊属性集，当我们执行不同的命令时，nix就会在outputs返回的属性集中选择对应的derivation执行：
 
 ```nix
 { self, ... }@inputs:
