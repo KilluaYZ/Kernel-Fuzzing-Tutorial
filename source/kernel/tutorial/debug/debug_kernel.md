@@ -62,7 +62,7 @@ qemu-system-x86_64 \
 	2>&1 | tee vm.log
 ```
 
-其中，`-smp 1`建议开启，只要不是为了研究SMP并发，就设为1，不然调试难度可能有点大。建议不要加`-enable-kvm`，否则添加断点的时候，就要使用hbreak，不太方便，调试时候对性能也不会有太高的要求。`-append`中是传给kernel的参数，建议带上`nokaslr`，关闭内核地址随机化，方便调试。`-s`是-s shorthand for -gdb tcp::1234，设置gdb调试的默认端口。`-S`是-S freeze CPU at startup (use 'c' to start execution)，表示在入口处停下。
+其中，`-smp 1`建议开启，只要不是为了研究SMP并发，就设为1，不然调试难度可能有点大。建议不要加`-enable-kvm`，否则添加断点的时候，就要使用hbreak，不太方便，调试时候对性能也不会有太高的要求。`-append`中是传给kernel的参数，**一定**带上`nokaslr`，关闭内核地址随机化，**否则断点无法触发，也无法进行单步调试**。`-s`是-s shorthand for -gdb tcp::1234，设置gdb调试的默认端口。`-S`是-S freeze CPU at startup (use 'c' to start execution)，表示在入口处停下。
 
 
 ### 命令行使用gdb连接
