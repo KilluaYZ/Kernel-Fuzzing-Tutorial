@@ -74,8 +74,8 @@ Simple wiki~
 
 kernel/index.md
 fuzzer/index.md
+simulator/index.md
 paper/index.md
 nix/index.md
-simulator/index.md
 wiki/index.md
 ```

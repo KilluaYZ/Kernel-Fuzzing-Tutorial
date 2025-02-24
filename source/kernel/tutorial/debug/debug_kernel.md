@@ -53,7 +53,7 @@ qemu-system-x86_64 \
 	-kernel $KERNEL/arch/x86_64/boot/bzImage \
 	-append "console=ttyS0 root=/dev/sdb earlyprintk=serial net.ifnames=0 nokaslr" \
 	-drive file=$IMAGE/bullseye.img,format=raw \
-	-net user,host=10.0.2.10,hostfwd=tcp:127.0.0.1:10021-:22 \
+	-net user,host=10.0.2.10,hostfwd=tinfo breakpointscp:127.0.0.1:10021-:22 \
 	-net nic,model=e1000 \
 	-enable-kvm \
 	-nographic \
@@ -62,7 +62,7 @@ qemu-system-x86_64 \
 	2>&1 | tee vm.log
 ```
 
-其中，`-smp 1`建议开启，只要不是为了研究SMP并发，就设为1，不然调试难度可能有点大。建议不要加`-enable-kvm`，否则添加断点的时候，就要使用hbreak，不太方便，调试时候对性能也不会有太高的要求。`-append`中是传给kernel的参数，建议带上`nokaslr`，关闭内核地址随机化，方便调试。`-s`是-s shorthand for -gdb tcp::1234，设置gdb调试的默认端口。`-S`是-S freeze CPU at startup (use 'c' to start execution)，表示在入口处停下。
+其中，`-smp 1`建议开启，只要不是为了研究SMP并发，就设为1，不然调试难度可能有点大。建议不要加`-enable-kvm`，否则添加断点的时候，就要使用hbreak，不太方便，调试时候对性能也不会有太高的要求。`-append`中是传给kernel的参数，**一定**带上`nokaslr`，关闭内核地址随机化，**否则断点无法触发，也无法进行单步调试**。`-s`是-s shorthand for -gdb tcp::1234，设置gdb调试的默认端口。`-S`是-S freeze CPU at startup (use 'c' to start execution)，表示在入口处停下。
 
 
 ### 命令行使用gdb连接
@@ -137,6 +137,10 @@ target remote localhost:1234
 }
 ```
 
+最终我们在Vscode中便可以进行调试
+
+![Vscode调试Linux Kernel](1.png)
+
 ## 打印调式信息
 
 ### BUG() 和 BUG_ON()
@@ -182,3 +186,52 @@ printk相比printf多了一个指定LOG等级的功能，内核根据这个等�
 #define KERN_DEFAULT	KERN_SOH ""	/* the default kernel loglevel */
 ```
 
+## 参考的qemu运行脚本
+
+```bash
+#!/bin/bash
+
+KERNEL=./arch/x86_64/boot/bzImage
+# KERNEL=/new-pool/linux_kernel/kernel/v6.10/arch/x86/boot/bzImage
+IMAGE=/new-pool/linux_kernel/Kernel_Fuzzing_Env/kernel/images/buster.img
+
+# 初始化 DEBUG 为 0，表示未启用调试模式
+DEBUG=0
+DEBUG_FLAGS=""
+KVM_FLAGS="-enable-kvm"
+# 使用 getopts 处理短选项 -d
+while getopts ":d" opt; do
+    case $opt in
+        d)
+            DEBUG=1
+            ;;
+        \?)
+            echo "无效的选项: -$OPTARG"
+            exit 1
+            ;;
+    esac
+done
+
+# 根据 DEBUG 的值输出结果
+if [ $DEBUG -eq 1 ]; then
+    echo "调试模式已启用。"
+        DEBUG_FLAGS=" -s -S "
+        KVM_FLAGS=""
+else
+    echo "调试模式未启用。"
+fi
+
+sudo qemu-system-x86_64 \
+        -m 2G \
+        -smp 2 \
+        -kernel $KERNEL \
+        -append "console=ttyS0 root=/dev/sda earlyprintk=serial net.ifnames=0 nokaslr" \
+        -drive file=$IMAGE,format=raw \
+        -net user,host=10.0.2.10,hostfwd=tcp:127.0.0.1:10021-:22 \
+        -net nic,model=e1000 \
+        $KVM_FLAGS \
+        -nographic \
+        $DEBUG_FLAGS \
+        -pidfile vm.pid \
+        2>&1 | tee vm.log
+```
