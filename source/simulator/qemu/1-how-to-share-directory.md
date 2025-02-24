@@ -28,7 +28,7 @@
 
     - `security_model=none`: 禁用安全模型，意味着 VirtFS 不会修改文件的权限或所有权。文件将以宿主机上的实际权限在虚拟机中可见，这可能带来安全性风险，但在需要直接访问的情况下非常有用。
 
-    2. `-device virtio-9p-pci, fsdev=test_dev, mount_tag=test_mount`
+    2. `-device virtio-9p-pci, fsdev=test_dev, mount_tag=test_mount`               
 
     - `virtio-9p-pci`: 添加一个 Virtio 9P 协议的设备，通过PCI总线连接。Virtio 是一种高效的虚拟化设备接口，而 9P 是一种远程文件系统协议，适用于高性能共享存储。
 
