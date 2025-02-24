@@ -10,4 +10,5 @@
 tutorial/index.md
 bugs/index.md
 trouble_shot/index.md
+sysfs.md
 ```
