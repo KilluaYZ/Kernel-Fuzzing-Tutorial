@@ -5,7 +5,7 @@ QEMU（Quick Emulator）是一个开源的虚拟机监控程序（hypervisor）�
 
 ```{toctree}
 :glob:
-:maxdepth: 2
+:maxdepth: 1
 
 0-how-to-use-kvm/0-how-to-use-kvm.md
 1-how-to-share-directory.md

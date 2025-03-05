@@ -3,9 +3,10 @@
 
 ```{toctree}
 :glob:
-:maxdepth: 2
+:maxdepth: 1
 
 compile_run/compile_run.md
+build_image/build_image.md
 debug/debug_kernel.md
 simple_driver/simple_driver.md
 load_module/linux_kernel_load_module.md
