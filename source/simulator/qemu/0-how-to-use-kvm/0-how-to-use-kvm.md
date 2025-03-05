@@ -18,4 +18,4 @@ sudo apt-get install qemu-kvm libvirt-bin bridge-utils virt-manager virtinst vir
 sudo virt-manager
 ```
 
-使用图形化工具来管理，用起来还挺快的。
+使用图形化工具来管理，用起来还挺方便的。
