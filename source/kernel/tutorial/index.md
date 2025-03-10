@@ -14,4 +14,5 @@ udev/udev.md
 sysfs/sysfs.md
 ebpf/ebpf.md
 ioctl/ioctl.md
+device_driver_arch/device_driver_arch.md
 ```
