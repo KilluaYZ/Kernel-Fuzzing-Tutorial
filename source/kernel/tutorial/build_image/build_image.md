@@ -1,5 +1,9 @@
 # 如何制作简单的Linux系统镜像
 
+> 参考文章：
+>
+> https://www.jeanleo.com/?p=251
+
 ## 介绍
 
 我们在启动Linux之前，需要制作一个系统镜像，这个镜像可以是Ubuntu这类带有用户界面，包数量众多的庞大镜像，也可以是非常小，仅有基本包和文件结构的最小化系统镜像。我们在Kernel Fuzzing的时候，一般不会选择太过庞大的镜像，因为那会儿带来不必要的资源开销。所以本文主要介绍的就是最小化系统镜像的构建。
@@ -310,6 +314,105 @@ sudo mount -o loop $RELEASE.img /mnt/$DIR
 sudo cp -a $DIR/. /mnt/$DIR/.
 sudo umount /mnt/$DIR
 
+```
+
+## 从Ubuntu官网下载镜像
+
+除了使用`create-image.sh`之外，比较熟悉Ubuntu的朋友们也可以从Ubuntu官网下载镜像
+
+https://cdimage.ubuntu.com/cdimage/ubuntu-base/releases/20.04/release/
+
+![](./img/1.png)
+
+这里我们选择下载`ubuntu-base-20.04.1-base-amd64.tar.gz`，这是一个基础的文件系统目录结构和一些通用配置文件。
+我们还需下载安装其他软件才能将系统运行起来。
+
+创建一个镜像文件，因为我们还需要安装其他软件，所以选择创建了2G大小的镜像，这个根据实际需求来就好
+
+```console
+dd if=/dev/zero of=rootfs.img bs=2048 count=1M
+```
+
+接着对镜像进行格式化
+
+```console
+mkfs.ext4 -F -L linuxroot rootfs.img
+```
+
+然后将该镜像挂在到目录上
+
+```console
+mkdir /mnt/tmpdir
+mount -o loop rootfs.img /mnt/tmpdir/
+```
+
+将下载下来的压缩包解压到镜像文件中
+
+```console
+tar zxvf ubuntu-base-20.04-base-amd64.tar.gz -C /mnt/tmpdir/
+```
+
+挂载好后，我们需要往它上面安装软件，为了能够使用上apt命令去安装软件，因此需要在chroot切换根环境前，把所需的DNS配置及各种内存文件系统挂载上去。
+
+```console
+cp /etc/resolv.conf /mnt/tmpdir/etc/
+mount -t proc /proc /mnt/tmpdir/proc
+mount -t sysfs /sys /mnt/tmpdir/sys
+mount -o bind /dev /mnt/tmpdir/dev
+mount -o bind /dev/pts /mnt/tmpdir/dev/pts
+```
+
+挂载好了之后，就可以切换根文件系统了
+
+```console
+chroot /mnt/tmpdir
+```
+
+进入了rootfs文件系统中后，可以使用apt安装程序
+
+```console
+apt update
+apt install language-pack-en-base \
+            sudo \
+            ssh \
+            net-tools \
+            ethtool \
+            wireless-tools \
+            ifupdown \
+            network-manager \
+            iputils-ping \
+            rsyslog \
+            htop \
+            vim
+```
+
+安装完之后，记得给root用户配置密码
+
+```console
+passwd root
+```
+
+然后修改`hostname`，否则可能无法上网
+
+```console
+echo "guest_os" > /etc/hostname
+```
+
+修改`/etc/hosts`配置路由信息
+
+```
+127.0.0.1 localhost
+127.0.0.1 guest_os
+```
+
+然后就可以卸载系统了
+
+```console
+umount /mnt/tmpdir/proc/
+umount /mnt/tmpdir/sys/
+umount /mnt/tmpdir/dev/pts/
+umount /mnt/tmpdir/dev/
+umount /mnt/tmpdir/
 ```
 
 ## 如何将raw格式的镜像转为qcow2格式
