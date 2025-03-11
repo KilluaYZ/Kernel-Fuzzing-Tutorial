@@ -1,0 +1,1255 @@
+./strace-static-x86_64 -e \!wait4,clock_nanosleep,nanosleep -s 100 -x -f ./syz-executor4115409040
+
+<...>
+Warning: Permanently added '10.128.0.75' (ED25519) to the list of known hosts.
+execve("./syz-executor4115409040", ["./syz-executor4115409040"], 0x7ffdc01b8a40 /* 10 vars */) = 0
+brk(NULL)                               = 0x555555c7a000
+brk(0x555555c7ad40)                     = 0x555555c7ad40
+arch_prctl(ARCH_SET_FS, 0x555555c7a3c0) = 0
+set_tid_address(0x555555c7a690)         = 5059
+set_robust_list(0x555555c7a6a0, 24)     = 0
+rseq(0x555555c7ace0, 0x20, 0, 0x53053053) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, rlim_max=RLIM64_INFINITY}) = 0
+readlink("/proc/self/exe", "/root/syz-executor4115409040", 4096) = 28
+getrandom("\x47\x0d\xdf\x74\x77\x9e\xc0\x98", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x555555c7ad40
+brk(0x555555c9bd40)                     = 0x555555c9bd40
+brk(0x555555c9c000)                     = 0x555555c9c000
+mprotect(0x7f481cfde000, 16384, PROT_READ) = 0
+mmap(0x1ffff000, 4096, PROT_NONE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x1ffff000
+mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
+mmap(0x21000000, 4096, PROT_NONE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x21000000
+unshare(CLONE_NEWPID)                   = 0
+clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x555555c7a690) = 5060
+./strace-static-x86_64: Process 5060 attached
+[pid  5060] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5060] mount(NULL, "/sys/fs/fuse/connections", "fusectl", 0, NULL) = -1 EBUSY (Device or resource busy)
+[pid  5060] socket(AF_BLUETOOTH, SOCK_RAW, BTPROTO_HCI) = 3
+[pid  5060] openat(AT_FDCWD, "/dev/vhci", O_RDWR) = 4
+[pid  5060] dup2(4, 202)                = 202
+[pid  5060] close(4)                    = 0
+[pid  5060] write(202, "\xff\x00", 2)   = 2
+[pid  5060] read(202, "\xff\x00\x00\x00", 4) = 4
+[pid  5060] rt_sigaction(SIGRT_1, {sa_handler=0x7f481cf7fcd0, sa_mask=[], sa_flags=SA_RESTORER|SA_ONSTACK|SA_RESTART|SA_SIGINFO, sa_restorer=0x7f481cf71350}, NULL, 8) = 0
+[pid  5060] rt_sigprocmask(SIG_UNBLOCK, [RTMIN RT_1], NULL, 8) = 0
+[pid  5060] mmap(NULL, 8392704, PROT_NONE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_STACK, -1, 0) = 0x7f481c71a000
+[pid  5060] mprotect(0x7f481c71b000, 8388608, PROT_READ|PROT_WRITE) = 0
+[pid  5060] rt_sigprocmask(SIG_BLOCK, ~[], [], 8) = 0
+[pid  5060] clone3({flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTID, child_tid=0x7f481cf1a990, parent_tid=0x7f481cf1a990, exit_signal=0, stack=0x7f481c71a000, stack_size=0x800300, tls=0x7f481cf1a6c0}./strace-static-x86_64: Process 5063 attached
+ => {parent_tid=[2]}, 88) = 2
+[pid  5063] rseq(0x7f481cf1afe0, 0x20, 0, 0x53053053 <unfinished ...>
+[pid  5060] rt_sigprocmask(SIG_SETMASK, [],  <unfinished ...>
+[pid  5063] <... rseq resumed>)         = 0
+[pid  5063] set_robust_list(0x7f481cf1a9a0, 24 <unfinished ...>
+[pid  5060] <... rt_sigprocmask resumed>NULL, 8) = 0
+[pid  5060] ioctl(3, HCIDEVUP <unfinished ...>
+[pid  5063] <... set_robust_list resumed>) = 0
+[pid  5063] rt_sigprocmask(SIG_SETMASK, [], NULL, 8) = 0
+[pid  5063] read(202, "\x01\x03\x0c\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x03\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x03\x10\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x03\x10", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x01\x10\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x01\x10", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x09\x10\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\x0a", iov_len=2}, {iov_base="\x01\x09\x10", iov_len=3}, {iov_base="\x00\xaa\xaa\xaa\xaa\xaa\xaa", iov_len=7}], 4) = 13
+[pid  5063] read(202, "\x01\x05\x10\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\x0b", iov_len=2}, {iov_base="\x01\x05\x10", iov_len=3}, {iov_base="\x00\xfd\x03\x60\x04\x00\x06\x00", iov_len=8}], 4) = 14
+[pid  5063] read(202, "\x01\x23\x0c\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x23\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x14\x0c\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x14\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x25\x0c\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x25\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x38\x0c\x00", 1024) = 4
+[   74.342329][   T50] Bluetooth: hci0: unexpected cc 0x0c03 length: 249 > 1
+[   74.351104][   T50] Bluetooth: hci0: unexpected cc 0x1003 length: 249 > 9
+[   74.359820][   T50] Bluetooth: hci0: unexpected cc 0x1001 length: 249 > 9
+[   74.379752][   T50] Bluetooth: hci0: unexpected cc 0x0c23 length: 249 > 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x38\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x39\x0c\x00", 1024) = 4
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x39\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202, "\x01\x16\x0c\x02\x00\x7d", 1024) = 6
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\xfc", iov_len=2}, {iov_base="\x01\x16\x0c", iov_len=3}, {iov_base="\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"..., iov_len=249}], 4) = 255
+[pid  5063] read(202,  <unfinished ...>
+[pid  5060] <... ioctl resumed>, 0)     = -1 EALREADY (Operation already in progress)
+[pid  5060] ioctl(3, HCISETSCAN <unfinished ...>
+[pid  5063] <... read resumed>"\x01\x1a\x0c\x01\x02", 1024) = 5
+[pid  5063] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x0e\x04", iov_len=2}, {iov_base="\x01\x1a\x0c", iov_len=3}, {iov_base="\x00", iov_len=1}], 4) = 7
+[pid  5063] rt_sigprocmask(SIG_BLOCK, ~[RT_1],  <unfinished ...>
+[pid  5060] <... ioctl resumed>, 0x7ffe075c801c) = 0
+[pid  5063] <... rt_sigprocmask resumed>NULL, 8) = 0
+[pid  5060] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x04\x0a", iov_len=2}, {iov_base="\xaa\xaa\xaa\xaa\xaa\x10\x00\x00\x00\x01", iov_len=10}], 3 <unfinished ...>
+[pid  5063] madvise(0x7f481c71a000, 8372224, MADV_DONTNEED <unfinished ...>
+[pid  5060] <... writev resumed>)       = 13
+[pid  5060] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x03\x0b", iov_len=2}, {iov_base="\x00\xc8\x00\xaa\xaa\xaa\xaa\xaa\x10\x01\x00", iov_len=11}], 3 <unfinished ...>
+[pid  5063] <... madvise resumed>)      = 0
+[pid  5060] <... writev resumed>)       = 14
+[pid  5060] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\v\v", iov_len=2}, {iov_base="\x00\xc8\x00\x00\x00\x00\x00\x00\x00\x00\x00", iov_len=11}], 3) = 14
+[pid  5060] writev(202, [{iov_base="\x04", iov_len=1}, {iov_base="\x3e\x13", iov_len=2}, {iov_base="\x01\x00\xc9\x00\x01\x00\xaa\xaa\xaa\xaa\xaa\x11\x00\x00\x00\x00\x00\x00\x00", iov_len=19}], 3 <unfinished ...>
+[pid  5063] exit(0)                     = ?
+[pid  5060] <... writev resumed>)       = 22
+[pid  5063] +++ exited with 0 +++
+[pid  5060] close(3)                    = 0
+[pid  5060] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5060] setsid()                    = 1
+[   74.409777][   T50] Bluetooth: hci0: unexpected cc 0x0c25 length: 249 > 3
+[   74.428620][   T50] Bluetooth: hci0: unexpected cc 0x0c38 length: 249 > 2
+[pid  5060] prlimit64(0, RLIMIT_AS, {rlim_cur=204800*1024, rlim_max=204800*1024}, NULL) = 0
+[pid  5060] prlimit64(0, RLIMIT_MEMLOCK, {rlim_cur=32768*1024, rlim_max=32768*1024}, NULL) = 0
+[pid  5060] prlimit64(0, RLIMIT_FSIZE, {rlim_cur=139264*1024, rlim_max=139264*1024}, NULL) = 0
+[pid  5060] prlimit64(0, RLIMIT_STACK, {rlim_cur=1024*1024, rlim_max=1024*1024}, NULL) = 0
+[pid  5060] prlimit64(0, RLIMIT_CORE, {rlim_cur=131072*1024, rlim_max=131072*1024}, NULL) = 0
+[pid  5060] prlimit64(0, RLIMIT_NOFILE, {rlim_cur=256, rlim_max=256}, NULL) = 0
+[pid  5060] unshare(CLONE_NEWNS)        = 0
+[pid  5060] mount(NULL, "/", NULL, MS_REC|MS_PRIVATE, NULL) = 0
+[pid  5060] unshare(CLONE_NEWIPC)       = 0
+[pid  5060] unshare(CLONE_NEWCGROUP)    = 0
+[pid  5060] unshare(CLONE_NEWUTS)       = 0
+[pid  5060] unshare(CLONE_SYSVSEM)      = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/shmmax", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "16777216", 8)     = 8
+[pid  5060] close(3)                    = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/shmall", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "536870912", 9)    = 9
+[pid  5060] close(3)                    = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/shmmni", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "1024", 4)         = 4
+[pid  5060] close(3)                    = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/msgmax", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "8192", 4)         = 4
+[pid  5060] close(3)                    = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/msgmni", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "1024", 4)         = 4
+[pid  5060] close(3)                    = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/msgmnb", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "1024", 4)         = 4
+[pid  5060] close(3)                    = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/kernel/sem", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "1024 1048576 500 1024", 21) = 21
+[pid  5060] close(3)                    = 0
+[pid  5060] getpid()                    = 1
+[pid  5060] capget({version=_LINUX_CAPABILITY_VERSION_3, pid=1}, {effective=1<<CAP_CHOWN|1<<CAP_DAC_OVERRIDE|1<<CAP_DAC_READ_SEARCH|1<<CAP_FOWNER|1<<CAP_FSETID|1<<CAP_KILL|1<<CAP_SETGID|1<<CAP_SETUID|1<<CAP_SETPCAP|1<<CAP_LINUX_IMMUTABLE|1<<CAP_NET_BIND_SERVICE|1<<CAP_NET_BROADCAST|1<<CAP_NET_ADMIN|1<<CAP_NET_RAW|1<<CAP_IPC_LOCK|1<<CAP_IPC_OWNER|1<<CAP_SYS_MODULE|1<<CAP_SYS_RAWIO|1<<CAP_SYS_CHROOT|1<<CAP_SYS_PTRACE|1<<CAP_SYS_PACCT|1<<CAP_SYS_ADMIN|1<<CAP_SYS_BOOT|1<<CAP_SYS_NICE|1<<CAP_SYS_RESOURCE|1<<CAP_SYS_TIME|1<<CAP_SYS_TTY_CONFIG|1<<CAP_MKNOD|1<<CAP_LEASE|1<<CAP_AUDIT_WRITE|1<<CAP_AUDIT_CONTROL|1<<CAP_SETFCAP|1<<CAP_MAC_OVERRIDE|1<<CAP_MAC_ADMIN|1<<CAP_SYSLOG|1<<CAP_WAKE_ALARM|1<<CAP_BLOCK_SUSPEND|1<<CAP_AUDIT_READ|1<<CAP_PERFMON|1<<CAP_BPF|1<<CAP_CHECKPOINT_RESTORE, permitted=1<<CAP_CHOWN|1<<CAP_DAC_OVERRIDE|1<<CAP_DAC_READ_SEARCH|1<<CAP_FOWNER|1<<CAP_FSETID|1<<CAP_KILL|1<<CAP_SETGID|1<<CAP_SETUID|1<<CAP_SETPCAP|1<<CAP_LINUX_IMMUTABLE|1<<CAP_NET_BIND_SERVICE|1<<CAP_NET_BROADCAST|1<<CAP_NET_ADMIN|1<<CAP_NET_RAW|1<<CAP_IPC_LOCK|1<<CAP_IPC_OWNER|1<<CAP_SYS_MODULE|1<<CAP_SYS_RAWIO|1<<CAP_SYS_CHROOT|1<<CAP_SYS_PTRACE|1<<CAP_SYS_PACCT|1<<CAP_SYS_ADMIN|1<<CAP_SYS_BOOT|1<<CAP_SYS_NICE|1<<CAP_SYS_RESOURCE|1<<CAP_SYS_TIME|1<<CAP_SYS_TTY_CONFIG|1<<CAP_MKNOD|1<<CAP_LEASE|1<<CAP_AUDIT_WRITE|1<<CAP_AUDIT_CONTROL|1<<CAP_SETFCAP|1<<CAP_MAC_OVERRIDE|1<<CAP_MAC_ADMIN|1<<CAP_SYSLOG|1<<CAP_WAKE_ALARM|1<<CAP_BLOCK_SUSPEND|1<<CAP_AUDIT_READ|1<<CAP_PERFMON|1<<CAP_BPF|1<<CAP_CHECKPOINT_RESTORE, inheritable=0}) = 0
+[pid  5060] capset({version=_LINUX_CAPABILITY_VERSION_3, pid=1}, {effective=1<<CAP_CHOWN|1<<CAP_DAC_OVERRIDE|1<<CAP_DAC_READ_SEARCH|1<<CAP_FOWNER|1<<CAP_FSETID|1<<CAP_KILL|1<<CAP_SETGID|1<<CAP_SETUID|1<<CAP_SETPCAP|1<<CAP_LINUX_IMMUTABLE|1<<CAP_NET_BIND_SERVICE|1<<CAP_NET_BROADCAST|1<<CAP_NET_ADMIN|1<<CAP_NET_RAW|1<<CAP_IPC_LOCK|1<<CAP_IPC_OWNER|1<<CAP_SYS_MODULE|1<<CAP_SYS_RAWIO|1<<CAP_SYS_CHROOT|1<<CAP_SYS_PACCT|1<<CAP_SYS_ADMIN|1<<CAP_SYS_BOOT|1<<CAP_SYS_RESOURCE|1<<CAP_SYS_TIME|1<<CAP_SYS_TTY_CONFIG|1<<CAP_MKNOD|1<<CAP_LEASE|1<<CAP_AUDIT_WRITE|1<<CAP_AUDIT_CONTROL|1<<CAP_SETFCAP|1<<CAP_MAC_OVERRIDE|1<<CAP_MAC_ADMIN|1<<CAP_SYSLOG|1<<CAP_WAKE_ALARM|1<<CAP_BLOCK_SUSPEND|1<<CAP_AUDIT_READ|1<<CAP_PERFMON|1<<CAP_BPF|1<<CAP_CHECKPOINT_RESTORE, permitted=1<<CAP_CHOWN|1<<CAP_DAC_OVERRIDE|1<<CAP_DAC_READ_SEARCH|1<<CAP_FOWNER|1<<CAP_FSETID|1<<CAP_KILL|1<<CAP_SETGID|1<<CAP_SETUID|1<<CAP_SETPCAP|1<<CAP_LINUX_IMMUTABLE|1<<CAP_NET_BIND_SERVICE|1<<CAP_NET_BROADCAST|1<<CAP_NET_ADMIN|1<<CAP_NET_RAW|1<<CAP_IPC_LOCK|1<<CAP_IPC_OWNER|1<<CAP_SYS_MODULE|1<<CAP_SYS_RAWIO|1<<CAP_SYS_CHROOT|1<<CAP_SYS_PACCT|1<<CAP_SYS_ADMIN|1<<CAP_SYS_BOOT|1<<CAP_SYS_RESOURCE|1<<CAP_SYS_TIME|1<<CAP_SYS_TTY_CONFIG|1<<CAP_MKNOD|1<<CAP_LEASE|1<<CAP_AUDIT_WRITE|1<<CAP_AUDIT_CONTROL|1<<CAP_SETFCAP|1<<CAP_MAC_OVERRIDE|1<<CAP_MAC_ADMIN|1<<CAP_SYSLOG|1<<CAP_WAKE_ALARM|1<<CAP_BLOCK_SUSPEND|1<<CAP_AUDIT_READ|1<<CAP_PERFMON|1<<CAP_BPF|1<<CAP_CHECKPOINT_RESTORE, inheritable=0}) = 0
+[pid  5060] unshare(CLONE_NEWNET)       = 0
+[pid  5060] openat(AT_FDCWD, "/proc/sys/net/ipv4/ping_group_range", O_WRONLY|O_CLOEXEC) = 3
+[pid  5060] write(3, "0 65535", 7)      = 7
+[pid  5060] close(3)                    = 0
+[pid  5060] mkdir("/dev/binderfs", 0777) = 0
+[pid  5060] mount("binder", "/dev/binderfs", "binder", 0, NULL) = 0
+[pid  5060] symlink("/dev/binderfs", "./binderfs") = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5065 attached
+, child_tidptr=0x555555c7a690) = 3
+[pid  5065] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5065] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5065] setpgid(0, 0)               = 0
+[pid  5065] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5065] write(3, "1000", 4)         = 4
+[pid  5065] close(3)                    = 0
+[pid  5065] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5065] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5065] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5065] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5065] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5065] exit_group(0)               = ?
+[pid  5065] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=3, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5066 attached
+, child_tidptr=0x555555c7a690) = 4
+[pid  5066] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5066] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5066] setpgid(0, 0)               = 0
+[pid  5066] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5066] write(3, "1000", 4)         = 4
+[pid  5066] close(3)                    = 0
+[pid  5066] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5066] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5066] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5066] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5066] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5066] exit_group(0)               = ?
+[pid  5066] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=4, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5067 attached
+, child_tidptr=0x555555c7a690) = 5
+[pid  5067] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5067] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5067] setpgid(0, 0)               = 0
+[pid  5067] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5067] write(3, "1000", 4)         = 4
+[pid  5067] close(3)                    = 0
+[pid  5067] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5067] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5067] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5067] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5067] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5067] exit_group(0)               = ?
+[pid  5067] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=5, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5068 attached
+, child_tidptr=0x555555c7a690) = 6
+[pid  5068] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5068] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5068] setpgid(0, 0)               = 0
+[pid  5068] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5068] write(3, "1000", 4)         = 4
+[pid  5068] close(3)                    = 0
+[pid  5068] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5068] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5068] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5068] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5068] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5068] exit_group(0)               = ?
+[pid  5068] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=6, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5069 attached
+, child_tidptr=0x555555c7a690) = 7
+[pid  5069] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5069] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5069] setpgid(0, 0)               = 0
+[pid  5069] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5069] write(3, "1000", 4)         = 4
+[pid  5069] close(3)                    = 0
+[pid  5069] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5069] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5069] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5069] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5069] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5069] exit_group(0)               = ?
+[pid  5069] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=7, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5070 attached
+, child_tidptr=0x555555c7a690) = 8
+[pid  5070] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5070] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5070] setpgid(0, 0)               = 0
+[pid  5070] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5070] write(3, "1000", 4)         = 4
+[pid  5070] close(3)                    = 0
+[pid  5070] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5070] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5070] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5070] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5070] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5070] exit_group(0)               = ?
+[pid  5070] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=8, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5071 attached
+, child_tidptr=0x555555c7a690) = 9
+[pid  5071] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5071] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5071] setpgid(0, 0)               = 0
+[pid  5071] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5071] write(3, "1000", 4)         = 4
+[pid  5071] close(3)                    = 0
+[pid  5071] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5071] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5071] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5071] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5071] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5071] exit_group(0)               = ?
+[pid  5071] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=9, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5072 attached
+ <unfinished ...>
+[pid  5072] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5072] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5072] setpgid(0, 0)               = 0
+[pid  5072] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC <unfinished ...>
+[pid  5060] <... clone resumed>, child_tidptr=0x555555c7a690) = 10
+[pid  5072] <... openat resumed>)       = 3
+[pid  5072] write(3, "1000", 4)         = 4
+[pid  5072] close(3)                    = 0
+[pid  5072] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5072] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5072] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5072] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5072] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5072] exit_group(0)               = ?
+[pid  5072] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=10, si_uid=0, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5073 attached
+, child_tidptr=0x555555c7a690) = 11
+[pid  5073] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5073] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5073] setpgid(0, 0)               = 0
+[pid  5073] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5073] write(3, "1000", 4)         = 4
+[pid  5073] close(3)                    = 0
+[pid  5073] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5073] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5073] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5073] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5073] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5073] exit_group(0)               = ?
+[pid  5073] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=11, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5074 attached
+, child_tidptr=0x555555c7a690) = 12
+[pid  5074] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5074] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5074] setpgid(0, 0)               = 0
+[pid  5074] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5074] write(3, "1000", 4)         = 4
+[pid  5074] close(3)                    = 0
+[pid  5074] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5074] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5074] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5074] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5074] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5074] exit_group(0)               = ?
+[pid  5074] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=12, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x555555c7a690) = 13
+./strace-static-x86_64: Process 5075 attached
+[pid  5075] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5075] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5075] setpgid(0, 0)               = 0
+[pid  5075] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5075] write(3, "1000", 4)         = 4
+[pid  5075] close(3)                    = 0
+[pid  5075] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5075] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5075] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5075] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5075] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5075] exit_group(0)               = ?
+[pid  5075] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=13, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5076 attached
+ <unfinished ...>
+[pid  5076] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5076] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5076] setpgid(0, 0)               = 0
+[pid  5076] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC <unfinished ...>
+[pid  5060] <... clone resumed>, child_tidptr=0x555555c7a690) = 14
+[pid  5076] <... openat resumed>)       = 3
+[pid  5076] write(3, "1000", 4)         = 4
+[pid  5076] close(3)                    = 0
+[pid  5076] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5076] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5076] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5076] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5076] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5076] exit_group(0)               = ?
+[pid  5076] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=14, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5077 attached
+, child_tidptr=0x555555c7a690) = 15
+[pid  5077] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5077] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5077] setpgid(0, 0)               = 0
+[pid  5077] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5077] write(3, "1000", 4)         = 4
+[pid  5077] close(3)                    = 0
+[pid  5077] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5077] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5077] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5077] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5077] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5077] exit_group(0)               = ?
+[pid  5077] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=15, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5078 attached
+, child_tidptr=0x555555c7a690) = 16
+[pid  5078] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5078] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5078] setpgid(0, 0)               = 0
+[pid  5078] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5078] write(3, "1000", 4)         = 4
+[pid  5078] close(3)                    = 0
+[pid  5078] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5078] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5078] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5078] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5078] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5078] exit_group(0)               = ?
+[pid  5078] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=16, si_uid=0, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5079 attached
+, child_tidptr=0x555555c7a690) = 17
+[pid  5079] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5079] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5079] setpgid(0, 0)               = 0
+[pid  5079] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5079] write(3, "1000", 4)         = 4
+[pid  5079] close(3)                    = 0
+[pid  5079] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5079] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5079] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5079] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5079] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5079] exit_group(0)               = ?
+[pid  5079] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=17, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5080 attached
+, child_tidptr=0x555555c7a690) = 18
+[pid  5080] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5080] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5080] setpgid(0, 0)               = 0
+[pid  5080] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5080] write(3, "1000", 4)         = 4
+[pid  5080] close(3)                    = 0
+[pid  5080] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5080] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5080] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5080] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5080] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5080] exit_group(0)               = ?
+[pid  5080] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=18, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5081 attached
+, child_tidptr=0x555555c7a690) = 19
+[pid  5081] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5081] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5081] setpgid(0, 0)               = 0
+[pid  5081] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5081] write(3, "1000", 4)         = 4
+[pid  5081] close(3)                    = 0
+[pid  5081] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5081] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5081] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5081] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5081] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5081] exit_group(0)               = ?
+[pid  5081] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=19, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5082 attached
+, child_tidptr=0x555555c7a690) = 20
+[pid  5082] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5082] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5082] setpgid(0, 0)               = 0
+[pid  5082] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5082] write(3, "1000", 4)         = 4
+[pid  5082] close(3)                    = 0
+[pid  5082] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5082] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5082] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5082] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5082] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5082] exit_group(0)               = ?
+[pid  5082] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=20, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] restart_syscall(<... resuming interrupted clone ...>) = 0
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x555555c7a690) = 21
+./strace-static-x86_64: Process 5083 attached
+[pid  5083] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5083] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5083] setpgid(0, 0)               = 0
+[pid  5083] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5083] write(3, "1000", 4)         = 4
+[pid  5083] close(3)                    = 0
+[pid  5083] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5083] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5083] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5083] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5083] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5083] exit_group(0)               = ?
+[pid  5083] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=21, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5084 attached
+, child_tidptr=0x555555c7a690) = 22
+[pid  5084] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5084] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5084] setpgid(0, 0)               = 0
+[pid  5084] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5084] write(3, "1000", 4)         = 4
+[pid  5084] close(3)                    = 0
+[pid  5084] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5084] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5084] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5084] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5084] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5084] exit_group(0)               = ?
+[pid  5084] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=22, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5085 attached
+, child_tidptr=0x555555c7a690) = 23
+[pid  5085] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5085] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5085] setpgid(0, 0)               = 0
+[pid  5085] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5085] write(3, "1000", 4)         = 4
+[pid  5085] close(3)                    = 0
+[pid  5085] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5085] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5085] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5085] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5085] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5085] exit_group(0)               = ?
+[pid  5085] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=23, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5086 attached
+, child_tidptr=0x555555c7a690) = 24
+[pid  5086] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5086] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5086] setpgid(0, 0)               = 0
+[pid  5086] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5086] write(3, "1000", 4)         = 4
+[pid  5086] close(3)                    = 0
+[pid  5086] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5086] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5086] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5086] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5086] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5086] exit_group(0)               = ?
+[pid  5086] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=24, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5087 attached
+ <unfinished ...>
+[pid  5087] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5087] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5087] setpgid(0, 0 <unfinished ...>
+[pid  5060] <... clone resumed>, child_tidptr=0x555555c7a690) = 25
+[pid  5087] <... setpgid resumed>)      = 0
+[pid  5087] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5087] write(3, "1000", 4)         = 4
+[pid  5087] close(3)                    = 0
+[pid  5087] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5087] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5087] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5087] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5087] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5087] exit_group(0)               = ?
+[pid  5087] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=25, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5088 attached
+, child_tidptr=0x555555c7a690) = 26
+[pid  5088] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5088] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5088] setpgid(0, 0)               = 0
+[pid  5088] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5088] write(3, "1000", 4)         = 4
+[pid  5088] close(3)                    = 0
+[pid  5088] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5088] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5088] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5088] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5088] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(17)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(18)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(19)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(20)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(21)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(22)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(23)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(24)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(25)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(26)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(27)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(28)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] close(29)                   = -1 EBADF (Bad file descriptor)
+[pid  5088] exit_group(0)               = ?
+[pid  5088] +++ exited with 0 +++
+[pid  5060] --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=26, si_uid=0, si_status=0, si_utime=0, si_stime=0} ---
+[pid  5060] clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD./strace-static-x86_64: Process 5089 attached
+, child_tidptr=0x555555c7a690) = 27
+[pid  5089] set_robust_list(0x555555c7a6a0, 24) = 0
+[pid  5089] prctl(PR_SET_PDEATHSIG, SIGKILL) = 0
+[pid  5089] setpgid(0, 0)               = 0
+[pid  5089] openat(AT_FDCWD, "/proc/self/oom_score_adj", O_WRONLY|O_CLOEXEC) = 3
+[pid  5089] write(3, "1000", 4)         = 4
+[pid  5089] close(3)                    = 0
+[pid  5089] bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_RAW_TRACEPOINT_WRITABLE, insn_cnt=0, insns=NULL, license=NULL, log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=-1, func_info_rec_size=8, func_info=NULL, func_info_cnt=0, line_info_rec_size=16, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL, ...}, 144) = -1 E2BIG (Argument list too long)
+[pid  5089] write(202, "\x04\x0e\x0f\x00\x61\x20\x08\xc8\x00\x03\x00\x09\x02\x00\x00\x83\x88\xf1", 18) = 18
+[pid  5089] write(202, "\x04\x3e\x82\x1d\xfa\xfd\xc4\x42\x57\x70\xea\xea\x47\x45\x9f\x2d\xcf\x21\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x08\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x10\x00\x00\x00\x00\x00\x00\x00"..., 133) = 133
+[pid  5089] close(3)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(4)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(5)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(6)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(7)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(8)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(9)                    = -1 EBADF (Bad file descriptor)
+[pid  5089] close(10)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(11)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(12)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(13)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(14)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(15)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(16)                   = -1 EBADF (Bad file descriptor)
+[pid  5089] close(17)                   = -1 EBADF (Bad file descriptor)
+[   78.895887][   T50] Bluetooth: hci0: Controller not accepting commands anymore: ncmd = 0
+[   78.904481][   T50] Bluetooth: hci0: Injecting HCI hardware error event
+[   78.912368][ T4455] Bluetooth: hci0: hardware error 0x00
+[   78.927609][ T4455] ==================================================================
+[   78.935701][ T4455] BUG: KASAN: null-ptr-deref in ida_free+0x218/0x2e0
+[   78.942407][ T4455] Read of size 8 at addr 0000000000000078 by task kworker/u5:1/4455
+[   78.950380][ T4455] 
+[   78.952697][ T4455] CPU: 1 PID: 4455 Comm: kworker/u5:1 Not tainted 6.7.0-rc2-next-20231124-syzkaller #0
+[   78.962430][ T4455] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
+[   78.972514][ T4455] Workqueue: hci0 hci_error_reset
+[   78.977545][ T4455] Call Trace:
+[   78.980929][ T4455]  <TASK>
+[   78.983871][ T4455]  dump_stack_lvl+0xd9/0x1b0
+[   78.988489][ T4455]  kasan_report+0xd9/0x110
+[   78.992922][ T4455]  ? ida_free+0x218/0x2e0
+[   78.997347][ T4455]  ? ida_free+0x218/0x2e0
+[   79.001777][ T4455]  kasan_check_range+0xef/0x190
+[   79.006644][ T4455]  ida_free+0x218/0x2e0
+[   79.011719][ T4455]  ? ida_destroy+0x3e0/0x3e0
+[   79.016319][ T4455]  ? bit_wait_timeout+0x160/0x160
+[   79.021449][ T4455]  ? hci_conn_unlink+0x486/0xa50
+[   79.026469][ T4455]  ? cis_cleanup+0xc50/0xc50
+[   79.031154][ T4455]  hci_conn_del+0x78c/0xe10
+[   79.035654][ T4455]  hci_conn_hash_flush+0x189/0x260
+[   79.040772][ T4455]  hci_dev_close_sync+0x5a7/0x1160
+[   79.045894][ T4455]  ? hci_reset_sync+0x50/0x50
+[   79.050569][ T4455]  ? reacquire_held_locks+0x4c0/0x4c0
+[   79.055949][ T4455]  hci_dev_do_close+0x2e/0x90
+[   79.060658][ T4455]  hci_error_reset+0xa6/0x190
+[   79.065333][ T4455]  process_one_work+0x8a4/0x15f0
+[   79.070280][ T4455]  ? lock_sync+0x190/0x190
+[   79.074701][ T4455]  ? workqueue_congested+0x300/0x300
+[   79.080081][ T4455]  ? assign_work+0x1a0/0x250
+[   79.084938][ T4455]  worker_thread+0x8b6/0x1290
+[   79.089628][ T4455]  ? __kthread_parkme+0x148/0x220
+[   79.094740][ T4455]  ? process_one_work+0x15f0/0x15f0
+[   79.099951][ T4455]  kthread+0x2c1/0x3a0
+[   79.104108][ T4455]  ? _raw_spin_unlock_irq+0x23/0x50
+[   79.109310][ T4455]  ? kthread_complete_and_exit+0x40/0x40
+[   79.114954][ T4455]  ret_from_fork+0x45/0x80
+[   79.119384][ T4455]  ? kthread_complete_and_exit+0x40/0x40
+[   79.125216][ T4455]  ret_from_fork_asm+0x11/0x20
+[   79.129991][ T4455]  </TASK>
+[   79.133018][ T4455] ==================================================================
+[   79.141073][ T4455] Kernel panic - not syncing: KASAN: panic_on_warn set ...
+[   79.148352][ T4455] CPU: 1 PID: 4455 Comm: kworker/u5:1 Not tainted 6.7.0-rc2-next-20231124-syzkaller #0
+[   79.158077][ T4455] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
+[   79.168315][ T4455] Workqueue: hci0 hci_error_reset
+[   79.173362][ T4455] Call Trace:
+[   79.176642][ T4455]  <TASK>
+[   79.179567][ T4455]  dump_stack_lvl+0xd9/0x1b0
+[   79.184605][ T4455]  panic+0x6dc/0x790
+[   79.188678][ T4455]  ? panic_smp_self_stop+0xa0/0xa0
+[   79.194508][ T4455]  ? rcu_is_watching+0x12/0xb0
+[   79.199276][ T4455]  ? reacquire_held_locks+0x4c0/0x4c0
+[   79.204751][ T4455]  ? check_panic_on_warn+0x1f/0xb0
+[   79.209867][ T4455]  check_panic_on_warn+0xab/0xb0
+[   79.214826][ T4455]  end_report+0x117/0x160
+[   79.219151][ T4455]  kasan_report+0xe9/0x110
+[   79.223665][ T4455]  ? ida_free+0x218/0x2e0
+[   79.228000][ T4455]  ? ida_free+0x218/0x2e0
+[   79.232358][ T4455]  kasan_check_range+0xef/0x190
+[   79.237211][ T4455]  ida_free+0x218/0x2e0
+[   79.241475][ T4455]  ? ida_destroy+0x3e0/0x3e0
+[   79.246075][ T4455]  ? bit_wait_timeout+0x160/0x160
+[   79.251130][ T4455]  ? hci_conn_unlink+0x486/0xa50
+[   79.256065][ T4455]  ? cis_cleanup+0xc50/0xc50
+[   79.260666][ T4455]  hci_conn_del+0x78c/0xe10
+[   79.265175][ T4455]  hci_conn_hash_flush+0x189/0x260
+[   79.270286][ T4455]  hci_dev_close_sync+0x5a7/0x1160
+[   79.275403][ T4455]  ? hci_reset_sync+0x50/0x50
+[   79.280255][ T4455]  ? reacquire_held_locks+0x4c0/0x4c0
+[   79.285891][ T4455]  hci_dev_do_close+0x2e/0x90
+[   79.290743][ T4455]  hci_error_reset+0xa6/0x190
+[   79.295514][ T4455]  process_one_work+0x8a4/0x15f0
+[   79.300465][ T4455]  ? lock_sync+0x190/0x190
+[   79.304879][ T4455]  ? workqueue_congested+0x300/0x300
+[   79.310169][ T4455]  ? assign_work+0x1a0/0x250
+[   79.314786][ T4455]  worker_thread+0x8b6/0x1290
+[   79.319554][ T4455]  ? __kthread_parkme+0x148/0x220
+[   79.324784][ T4455]  ? process_one_work+0x15f0/0x15f0
+[   79.330258][ T4455]  kthread+0x2c1/0x3a0
+[   79.334341][ T4455]  ? _raw_spin_unlock_irq+0x23/0x50
+[   79.339548][ T4455]  ? kthread_complete_and_exit+0x40/0x40
+[   79.345186][ T4455]  ret_from_fork+0x45/0x80
+[   79.349657][ T4455]  ? kthread_complete_and_exit+0x40/0x40
+[   79.355298][ T4455]  ret_from_fork_asm+0x11/0x20
+[   79.360070][ T4455]  </TASK>
+[   79.363311][ T4455] Kernel Offset: disabled
+[   79.367618][ T4455] Rebooting in 86400 seconds..

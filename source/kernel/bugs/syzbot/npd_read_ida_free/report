@@ -1,0 +1,34 @@
+Bluetooth: hci0: hardware error 0x00
+==================================================================
+BUG: KASAN: null-ptr-deref in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: null-ptr-deref in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+BUG: KASAN: null-ptr-deref in ida_free+0x218/0x2e0 lib/idr.c:511
+Read of size 8 at addr 0000000000000078 by task kworker/u5:1/4455
+
+CPU: 1 PID: 4455 Comm: kworker/u5:1 Not tainted 6.7.0-rc2-next-20231124-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/10/2023
+Workqueue: hci0 hci_error_reset
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xd9/0x1b0 lib/dump_stack.c:106
+ kasan_report+0xd9/0x110 mm/kasan/report.c:588
+ check_region_inline mm/kasan/generic.c:182 [inline]
+ kasan_check_range+0xef/0x190 mm/kasan/generic.c:188
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
+ ida_free+0x218/0x2e0 lib/idr.c:511
+ hci_conn_cleanup net/bluetooth/hci_conn.c:157 [inline]
+ hci_conn_del+0x78c/0xe10 net/bluetooth/hci_conn.c:1183
+ hci_conn_hash_flush+0x189/0x260 net/bluetooth/hci_conn.c:2643
+ hci_dev_close_sync+0x5a7/0x1160 net/bluetooth/hci_sync.c:5021
+ hci_dev_do_close+0x2e/0x90 net/bluetooth/hci_core.c:554
+ hci_error_reset+0xa6/0x190 net/bluetooth/hci_core.c:1059
+ process_one_work+0x8a4/0x15f0 kernel/workqueue.c:2633
+ process_scheduled_works kernel/workqueue.c:2706 [inline]
+ worker_thread+0x8b6/0x1290 kernel/workqueue.c:2787
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+ </TASK>
+==================================================================
