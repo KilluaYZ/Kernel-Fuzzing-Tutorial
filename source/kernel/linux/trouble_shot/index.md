@@ -1,5 +1,5 @@
-(kernel_trouble_shot)=
-# Kernel Trouble Shot
+(linux_kernel_trouble_shot)=
+# Linux Kernel Trouble Shot
 
 ```{toctree}
 :glob:

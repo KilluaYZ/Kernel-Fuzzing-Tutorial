@@ -1,5 +1,5 @@
-(kernel_bugs)=
-# Kernel Bugs
+(linux_kernel_bugs)=
+# Linux Kernel Bugs
 
 ```{toctree}
 :glob:

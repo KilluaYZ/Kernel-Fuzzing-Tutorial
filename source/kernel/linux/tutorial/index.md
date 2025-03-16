@@ -1,5 +1,5 @@
-(kernel_tutorial)=
-# Kernel Tutorial
+(linux_kernel_tutorial)=
+# Linux Kernel Tutorial
 
 ```{toctree}
 :glob:
@@ -15,4 +15,6 @@ sysfs/sysfs.md
 ebpf/ebpf.md
 ioctl/ioctl.md
 device_driver_arch/device_driver_arch.md
+xarray/xarray.md
+globalmem_driver/globalmem_driver.md
 ```
