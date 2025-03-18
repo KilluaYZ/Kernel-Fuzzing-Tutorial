@@ -1,5 +1,13 @@
 # 如何让Linux内核编译驱动模块并且加载驱动模块
 
+> 参考资料：
+>
+> https://zhuanlan.zhihu.com/p/443071338
+>
+> https://blog.csdn.net/luckyapple1028/article/details/44261391
+>
+> https://blog.csdn.net/hbuxiaofei/article/details/128266554
+
 在Linux Kernel Fuzzing的时候，我们经常需要做的一个操作就是反复地加载（Load）和卸载（Unload）一个内核驱动模块。这应该怎么做呢？
 
 ## Linux内核编译
@@ -83,4 +91,6 @@ insmod: ERROR: could not insert module ice.ko: Invalid module format
 ```
 
 这个问题可能是因为编译该模块时使用的内核编译选项和当前系统正在使用的内核编译选项不一样，这时候需要修改内核编译选项重新编译一下内核或该模块，保证二者的编译选项一致即可。
+
+## 驱动模块加载流程
 

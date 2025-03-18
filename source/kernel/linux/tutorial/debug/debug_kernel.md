@@ -79,6 +79,10 @@ gdb -tui $KERNEL/vmlinux
 target remote localhost:1234
 ```
 
+只用最原版的gdb可能比较麻烦，我们可以添加一个gdb的模组，让gdb更加好用。这里推荐使用[pwndbg](https://pwndbg.re/)，提供了更美观的界面和更丰富直观的提示信息，调试起来更舒服。
+
+![pwndbg界面](2.gif)
+
 ### 使用vscode进行调试
 
 配置launch.json如下，启动qemu之后，连接即可。
