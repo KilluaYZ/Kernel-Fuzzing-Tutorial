@@ -2,7 +2,7 @@
 build/
 extracted/
 requirements_frozen.txt
-result
-result*/
+result/
+result-2/
 source/_ext/__pycache__/
 .netlify
