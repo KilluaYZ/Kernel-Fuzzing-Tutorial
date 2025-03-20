@@ -4,6 +4,8 @@ extracted/
 requirements_frozen.txt
 result/
 result-2/
+result
+result-2 
 source/_ext/__pycache__/
 .netlify
 .idea/
