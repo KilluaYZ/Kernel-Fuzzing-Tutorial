@@ -7,8 +7,12 @@
 :glob:
 :maxdepth: 1
 
-drm/drm.md
-nix_with_glibc_compile_error.md
-nix_golang_get_proxy_connection_refused.md
-perf_event_open/perf_event_open.md
+0-drm/drm.md
+1-nix_with_glibc_compile_error/nix_with_glibc_compile_error.md
+2-nix_golang_get_proxy_connection_refused/nix_golang_get_proxy_connection_refused.md
+3-perf_event_open/perf_event_open.md
+4-compile_v4.x_undefined_ilog2_NaN/compile_v4.x_undefined_ilog2_NaN.md
+5-compile_linux_modules/compile_linux_modules.md
+6-specific_keyring_file_not_found/specific_keyring_file_not_found.md
+7-cannot_insert_hardware_breakpoint/cannot_insert_hardware_breakpoint.md
 ```

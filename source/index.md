@@ -1,7 +1,7 @@
 ---
 myst:
   html_meta:
-    "description lang=en": "Notes about things about Kernel Fuzzing"
+    "description lang=en": "Notes about Kernel Fuzzing"
     "keywords": "Nix, Nixpkgs, NixOS, Linux, build systems, deployment, packaging, declarative, reproducible, immutable, software, developer"
     "property=og:locale": "en_GB"
 ---

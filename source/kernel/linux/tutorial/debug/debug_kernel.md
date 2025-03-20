@@ -1,8 +1,4 @@
----
-title: Linux内核调试
-date: 2024-12-27 14:44:00
-tags: [linux, kvm, qemu]
----
+(linux_kernel_debug)=
 
 # Linux内核调试
 

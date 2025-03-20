@@ -6,3 +6,5 @@ result/
 result-2/
 source/_ext/__pycache__/
 .netlify
+.idea/
+.vscode/

@@ -8,7 +8,7 @@ perf_event_open系统调用从该函数名就可以看出 perf 与 event 联系�
 
 perf_event_open 对系统中打开的event分配一个对应的perf_event结构，所有对event的操作都是围绕perf_event来展开的。
 
-# 简介
+## 简介
 
 ```cpp
 #include <linux/perf_event.h>
