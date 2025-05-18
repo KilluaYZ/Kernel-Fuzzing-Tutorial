@@ -8,7 +8,8 @@ QEMU（Quick Emulator）是一个开源的虚拟机监控程序（hypervisor）�
 :maxdepth: 1
 
 0-how-to-use-kvm/0-how-to-use-kvm.md
-1-how-to-share-directory.md
-2-how-to-connect-net.md
+1-how-to-share-directory/1-how-to-share-directory.md
+2-how-to-connect-net/2-how-to-connect-net.md
 3-run-macos-on-kvm/3-run-macos-on-kvm.md
+4-how-to-load-custom-firmware/4-how-to-load-custom-firmware.md
 ```

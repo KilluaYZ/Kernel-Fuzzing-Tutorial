@@ -372,7 +372,7 @@ chroot /mnt/tmpdir
 
 ```console
 apt update
-apt install language-pack-en-base \
+apt install -y language-pack-en-base \
             sudo \
             ssh \
             net-tools \
@@ -383,7 +383,8 @@ apt install language-pack-en-base \
             iputils-ping \
             rsyslog \
             htop \
-            vim
+            vim \
+            kmod
 ```
 
 安装完之后，记得给root用户配置密码
@@ -405,7 +406,33 @@ echo "guest_os" > /etc/hostname
 127.0.0.1 guest_os
 ```
 
-然后就可以卸载系统了
+新版的Ubuntu发行版中会使用到`netplan`来管理网络，以24.04为例，如果想要Guest OS可以上网，那么需要做到以下几步：
+
+- 启动qemu虚拟机的时候，命令行参数中需要有以下参数。我不是很懂这个的配置，所以就照猫画虎的抄了一下，如果你明白这个配置的细节，那么你可以修改配置。总之就是要添加一个网卡。
+    ```
+    -netdev user,id=net0,hostfwd=tcp:127.0.0.1:10021-:22 -device virtio-net-pci,netdev=net0
+    # 或者下面这个也行
+    -net user,host=10.0.2.10,hostfwd=tcp:127.0.0.1:10021-:22 
+	-net nic,model=e1000 
+    ```
+
+- 配置`netplan`。具体来说，需要在`/etc/netplan/01-netcfg.yaml`下面添加配置（如果没有这个文件就新建一个）。这里我的网卡叫做`eth0`，如果不知道自己的网卡叫什么名字，可以用`ip a`展示一下。填写好该配置之后，执行一下`netplan apply`即可应用配置
+    ```yaml
+    network: 
+    version: 2
+    ethernets: 
+        eth0:
+        dhcp4: true
+        dhcp6: false 
+        nameservers:
+            addresses:
+            - 8.8.8.8
+            - 1.1.1.1
+    ```
+
+到此为止，我们就已经成功配置了Guest OS的网络。
+
+配置已经结束了，接下来就可以卸载系统了
 
 ```console
 umount /mnt/tmpdir/proc/
