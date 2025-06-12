@@ -729,6 +729,274 @@ static void edu_dma_timer(void *opaque)
 
 ## EDU 设备驱动
 
+### 注册设备驱动
+
+在注册驱动部分，实际上我们是在编写一个Linux内核模块，因此需要实现最基本的内核模块的注册
+
+```c
+// 定义该驱动支持的设备的厂商ID和设备ID（0x1234, 0x11e8）
+static struct pci_device_id pci_ids[] = {{PCI_DEVICE(0x1234, 0x11e8)},{0,}};
+// 将设别ID表导出道模块信息中，使得内核可以在驱动加载时知道它支持哪些设备
+MODULE_DEVICE_TABLE(pci, pci_ids);
+
+// 定义设备驱动结构体
+static struct pci_driver pci_driver = {
+    // 驱动名称
+    .name = DRIVER_NAME, 
+    // 支持的设备（其中包含了Vendor ID， Device ID）
+    // 内核通过这个表来匹配驱动和设备
+    .id_table = pci_ids, 
+    // 设备初始化
+    // 当内核发现一个PCI设备与 id_table 中的某个条目匹配时
+    // 就会调用该函数进行初始化
+    .probe = edu_probe, 
+    // 当驱动卸载或设备被移除（如热插拔）时，
+    // 就会调用该函数进行资源的回收清理
+    .remove = edu_remove,
+};
+
+// 注册PCI驱动，会在insmod、modprobe、系统启动时调用
+static int __init edu_init(void) {
+  int ret;
+  if ((ret = pci_register_driver(&pci_driver)) < 0) {
+    printk(KERN_ERR "[%s] Init failed. \n", DRIVER_NAME);
+    return ret;
+  }
+
+  printk(KERN_INFO "[%s] Init sucessfully. \n", DRIVER_NAME);
+  return ret;
+}
+
+// 注销PCI驱动
+// rmmod、系统关闭时调用
+static void __exit edu_exit(void) {
+  pci_unregister_driver(&pci_driver);
+  printk(KERN_INFO "[%s] exited. \n", DRIVER_NAME);
+}
+
+module_init(edu_init);
+module_exit(edu_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_DESCRIPTION("QEMU EDU Device Driver");
+```
+
+### 初始化设备
+
+设备驱动的初始化主要是通过`edu_probe`这个函数完成的，该函数会依次进行启用PCI设备、申请设备资源、初始化设备数据结构、注册字符设备、映射 MMIO、设置 DMA、注册中断处理函数、创建设备文件节点
+
+#### 分配设备结构体
+
+```c
+// 使用kzalloc函数分配设备结构体
+edu_dev = kzalloc(sizeof(*edu_dev), GFP_KERNEL);
+if (!edu_dev)
+    return -ENOMEM;
+// 赋值父pdev
+edu_dev->pdev = pdev;
+```
+
+#### 启用PCI设备
+
+```c
+// 启用PCI，使其可以被操作系统访问
+if ((ret = pci_enable_device(pdev)) < 0) {
+    printk(KERN_ERR "[%s] pci_enable_device failed. \n", DRIVER_NAME);
+    goto free_edu_device;
+}
+```
+
+#### 申请主设备号
+
+在Linux中，每一个设备都需要通过主设备号（Major）和次设备号（Minor）作为唯一标识，有动态分配和静态分配两种方式。
+动态分配使用`alloc_chrdev_region`让内核自动分配一个未使用的主设备号，这样会避免冲突。静态分配需要手动指定主设备号，但是需要我们自己处理冲突，因为可能其他驱动冲突。
+
+```c
+// 动态分配主设备号
+if ((ret = alloc_chrdev_region(&dev_num, BASEMINOR, DEVICE_COUNTS,
+                                 DRIVER_NAME)) < 0) {
+    printk(KERN_ERR "[%s] Failed to allocate char device region\n",
+            DRIVER_NAME);
+    goto disable_device;
+}
+edu_dev->dev_num = dev_num;
+```
+
+#### 初始化字符设备
+
+```c
+// 定义了文件操作函数集
+static struct file_operations fops = {.owner = THIS_MODULE,
+                                      .read = edu_read,
+                                      .write = edu_write,
+                                      .open = edu_open      };
+
+// 初始化字符设备
+// 将fops与edu_dev->cdev绑定
+// 当用户调用read("/dev/edu")就会调用fops->read (也就是edu_read)
+cdev_init(&edu_dev->cdev, &fops);
+edu_dev->cdev.owner = THIS_MODULE;
+
+// 注册字符设备到内核
+if (cdev_add(&edu_dev->cdev, edu_dev->dev_num, DEVICE_COUNTS)) {
+    printk(KERN_ERR "[%s] Failed to add cdev\n", DRIVER_NAME);
+    goto unregister_chrdev;
+}
+```
+
+#### 初始化Class
+
+在`/sys/class/`下创建一个设备类目录（如 `/sys/class/edu/`），用于统一管理同类设备
+
+```c
+edu_class = class_create(DRIVER_NAME);
+if (IS_ERR(edu_class)) {
+    printk(KERN_ERR "[%s] Failed to create class\n", DRIVER_NAME);
+    ret = PTR_ERR(edu_class);
+    goto delete_cdev;
+}
+```
+
+#### 初始化设备节点
+
+设备节点（Device Node）是用户空间和内核空间交互的桥梁，应用程序通过`read`，`open`，`write`访问设备，设备被当作一个文件进行读写。
+传统方式需要我们手动运行`mknod /dev/edu c 259 0`来创建设备节点，现代的驱动通过`device_create`在驱动初始化阶段自动生成设备节点
+
+```c
+// 创建设备节点：/dev/edu
+if (device_create(edu_class, NULL, edu_dev->dev_num, NULL, "edu") == NULL) {
+    printk(KERN_ERR "[%s] Failed to create device node\n", DRIVER_NAME);
+    ret = -EINVAL;
+    goto destroy_class;
+}
+```
+
+#### 初始化MMIO/IOP资源
+BAR是PCI/PCIe设备的基地址寄存器，在PCI设备中很常用，每一个BAR都会对应一片内存空间。BAR一般有两种方式进行访问：MMIO和PIO。这里的BAR为0，表示申请了一个id为0的BAR。
+
+以下代码先申请了一个BAR资源
+
+```c
+if ((ret = pci_request_region(pdev, BAR, DRIVER_NAME)) < 0) {
+    printk(KERN_ERR "[%s] pci_request_region failed. \n", DRIVER_NAME);
+    goto destroy_device;
+}
+```
+
+然后将其使用pci_iomap进行映射，通过MMIO的方式访问BAR对应的内存区域。
+
+```c
+// 映射BAR对应的内存区域
+mmio_base = pci_iomap(pdev, BAR, pci_resource_len(pdev, BAR));
+if (!mmio_base) {
+    printk(KERN_ERR "[%s] Cannot iomap BAR\n", DRIVER_NAME);
+    ret = -ENOMEM;
+    goto release_region;
+}
+edu_dev->mmio_base = mmio_base;
+```
+
+#### 初始化DMA
+
+##### 设置DMA掩码
+
+DMA（直接内存访问） 允许设备 绕过 CPU 直接读写内存，提高数据传输效率（如网卡收发包、磁盘读写）。设备通过DMA地址访问内存，但是**不能访问任意地址**（受硬件限制）
+因此我们就通过设置DMA掩码来限制设备可访问的内存范围。例如`DMA_BIT_MASK(28)`表示，我们只能访问`0x00000000`~`0x0FFFFFFF`（256M）的物理地址，如果超出这个限制，就会导致总线异常。此外现代的操作系统一般都是64位的，一些旧设备可能只支持32位，因此驱动可以使用DMA掩码来动态调整，提高驱动程序的兼容性。
+
+这里我们使用了`dma_set_mask_and_coherent`函数来同时设置流式DMA和一致性DMA的掩码。流式DMA和一致性DMA区别如下，仅供参考：
+
+| 特性         | 流式 DMA（Streaming DMA）                      | 一致性 DMA（Coherent DMA）                 |
+| ------------ | ---------------------------------------------- | ------------------------------------------ |
+| **用途**     | 短期、高速数据传输（如网络包、磁盘 I/O）。     | 长期共享内存（如设备控制块、环形缓冲区）。 |
+| **缓存行为** | **无缓存一致性**，需手动同步（`dma_sync_*`）。 | **硬件维护缓存一致性**，无需手动同步。     |
+| **内存分配** | `dma_map_single`/`dma_map_page`。              | `dma_alloc_coherent`。                     |
+| **性能**     | 更高（避免缓存一致性开销）。                   | 较低（硬件或软件需维护一致性）。           |
+| **适用场景** | 频繁传输的临时数据。                           | 设备与 CPU 长期共享的稳定数据结构。        |
+
+```c
+// 设置DMA掩码
+// EDU设备默认只支持28位
+if ((ret = dma_set_mask_and_coherent(&(pdev->dev), DMA_BIT_MASK(28))) < 0) {
+    dev_warn(&pdev->dev, "[%s] No suitable DMA available\n", DRIVER_NAME);
+    goto release_region;
+}
+```
+
+##### 启动DMA
+
+我们调用了函数`pci_set_master`，函数用于 启用 PCI 设备的 DMA 主控（Bus Master）模式，允许设备主动发起 DMA 操作（直接访问系统内存）。启用之后设备才可以主动读取内存（网卡主动接受数据，）或者写入内存（磁盘主动写入数据），未启用的话，设备只能响应CPU的IO操作，无法直接访问内存。
+
+```c
+pci_set_master(pdev);
+```
+
+#### 初始化中断请求（IRQ）
+
+这里我们启用了中断请求，其中的中断处理函数`edu_irq_handler`将在后面介绍
+
+```c
+if ((ret = request_irq(pdev->irq, edu_irq_handler, IRQF_SHARED, DRIVER_NAME,
+                         edu_dev)) < 0) {
+    printk(KERN_ERR "[%s] Failed to request IRQ %d\n", DRIVER_NAME, pdev->irq);
+    goto unmap_bar;
+}
+```
+
+#### 通过IO端口配置设备
+
+有两个地方值得一说，一个是通过函数`iowrite32`对edu设备的IO端口进行配置，这里的`EDU_STATUS`是0x20，正好对应了前文在解释edu设备时候说到的，对edu->status的修改。所以驱动模块写入的`STATUS_IRQFACT`会通过`edu_mmio_write`，将这个值与edu->status进行或运算，从而将对应的位置为1
+
+另一个就是，在初始化阶段，我们初始化了一个工作项（edu_dev->free_dma_work）将其与实际执行DMA的回调函数（free_dma_work_fn）进行绑定。我们在这里只是初始化了工作项，在系统进行中断处理的时候，会调用`schedule_work()`函数触发执行。
+
+```c
+// 初始化设备，配置其在完成阶乘计算之后，触发一个中断
+iowrite32(STATUS_IRQFACT, edu_dev->mmio_base + EDU_STATUS);
+// 初始化等待队列
+init_waitqueue_head(&edu_dev->wait_queue);
+// 初始时将complete设置为true，表示设备已经完成计算
+edu_dev->complete = true;
+// 初始化工作队列
+INIT_WORK(&edu_dev->free_dma_work, free_dma_work_fn);
+```
+
+### 释放设备
+
+设备的释放主要是通过函数`edu_remove`实现，具体来说，就是`edu_probe`的逆操作，将所占有的资源正确的释放。
+
+```c
+static void edu_remove(struct pci_dev *pdev) {
+  struct edu_device *edu_dev = pci_get_drvdata(pdev);
+
+  // 释放 IRQ
+  free_irq(pdev->irq, edu_dev);
+
+  // 释放 BAR 内存
+  pci_iounmap(pdev, edu_dev->mmio_base);
+
+  // 释放 PCI I/O 资源
+  pci_release_region(pdev, BAR);
+
+  // 删除设备节点 /dev/edu
+  device_destroy(edu_class, edu_dev->dev_num);
+
+  // 销毁class
+  class_destroy(edu_class);
+
+  // 删除cdev
+  cdev_del(&edu_dev->cdev);
+
+  // 取消注册的char设备区域
+  unregister_chrdev_region(edu_dev->dev_num, DEVICE_COUNTS);
+
+  // 禁用PCI设备
+  pci_disable_device(pdev);
+
+  // 释放先前分配的设备结构体
+  kfree(edu_dev);
+
+  printk(KERN_INFO "[%s] removed.\n", DRIVER_NAME);
+}
+```
 
 
 ## 上手实践
