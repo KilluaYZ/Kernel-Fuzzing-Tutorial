@@ -729,6 +729,10 @@ static void edu_dma_timer(void *opaque)
 
 ## EDU 设备驱动
 
+:::{important}
+以下介绍的设备驱动代码作者是[jklincn](https://jklincn.com/)，[源码仓库](https://github.com/jklincn/qemu_edu_driver)
+:::
+
 ### 注册设备驱动
 
 在注册驱动部分，实际上我们是在编写一个Linux内核模块，因此需要实现最基本的内核模块的注册
@@ -998,10 +1002,757 @@ static void edu_remove(struct pci_dev *pdev) {
 }
 ```
 
+### 打开设备
+
+```c
+/**
+ * edu_open - 打开edu设备的函数
+ * @inode: 设备文件的inode结构指针
+ * @filp: 设备文件结构指针
+ * 
+ * 功能:
+ * 1. 通过inode获取对应的edu_device设备结构
+ * 2. 记录当前打开设备的进程ID
+ * 3. 将设备结构指针存储在filp->private_data中供后续操作使用
+ * 
+ * 返回值:
+ * 成功返回0，失败返回负的错误码
+ */
+static int edu_open(struct inode *inode, struct file *filp) {
+    struct edu_device *edu_dev;
+
+    // 通过container_of宏从inode->i_cdev获取包含它的edu_device结构
+    edu_dev = container_of(inode->i_cdev, struct edu_device, cdev);
+
+    // 获取并存储当前进程的PID到设备结构中
+    edu_dev->user_pid = get_pid(task_pid(current));
+
+    // 将设备结构指针存储在filp->private_data中，供read/write/ioctl等操作使用
+    filp->private_data = edu_dev;
+
+    return 0;
+}
+
+```
+
+其中我们获取到了edu_dev, 当我们在后续的读写函数中，需要使用到这个设备的时候，我们就可以通过`filp->private_data`获取到这个设备，从而进行后续的操作。它有以下几个好处：
+
+1. **持久化访问**：在后续的`read`、`write`、`ioctl`等文件操作中，可以通过`filp->private_data`快速获取设备结构，避免重复查找
+2. **上下文保持**：每个打开的文件描述符(filp)可以维护自己独立的设备状态
+3. **线程安全**：不同进程/线程对同一设备的操作可以通过各自的filp隔离状态
+
+这是Linux设备驱动开发中的常见模式，特别是对于字符设备驱动。
+
+
+### 读设备
+
+从设备中获取数据的操作是通过函数`edu_read`完成的，具体的实现过程如下：
+
+```c
+/**
+ * edu_read - 从edu设备读取数据的函数
+ * @filp: 设备文件结构指针
+ * @buf: 用户空间缓冲区指针
+ * @count: 请求读取的字节数
+ * @ppos: 文件位置指针
+ * 
+ * 返回值:
+ *  成功返回实际读取的字节数，失败返回负的错误码
+ * 
+ * 功能说明:
+ * 1. 处理两种不同的读取操作：阶乘计算结果和DMA数据传输
+ * 2. 对输入参数进行严格校验
+ * 3. 使用copy_to_user安全地将数据从内核空间传输到用户空间
+ */
+static ssize_t edu_read(struct file *filp, char __user *buf, size_t count,
+                        loff_t *ppos) {
+    struct edu_device *edu_dev;
+    uint32_t value32;
+
+    /* 从file结构体的private_data获取设备特定数据 */
+    edu_dev = filp->private_data;
+
+    /* 
+     * 参数校验:
+     * - 偏移量<0x80时，只允许读取4字节
+     * - 偏移量>=0x80时，允许读取4或8字节
+     */
+    if ((*ppos < 0x80 && count != 4) ||
+        (*ppos >= 0x80 && count != 4 && count != 8)) {
+        return -EINVAL;
+    }
+
+    /* 根据偏移量处理不同的读取操作 */
+    switch (*ppos) {
+        case EDU_FACT_CALC: {
+            /* 等待阶乘计算完成 */
+            int ret;
+            ret = wait_event_interruptible(edu_dev->wait_queue,
+                                           edu_dev->complete);
+            /* 处理信号中断 */
+            if (ret == -ERESTARTSYS) {
+                return ret;
+            }
+            /* 从设备寄存器读取计算结果 */
+            value32 = ioread32(edu_dev->mmio_base + EDU_FACT_CALC);
+            /* 将结果拷贝到用户空间 */
+            if (copy_to_user(buf, &value32, sizeof(value32))) {
+                return -EFAULT;
+            }
+            break;
+        }
+        case EDU_DMA_GET: {
+            /* 
+             * DMA数据传输:
+             * 将DMA缓冲区内容传输到用户指定的地址
+             * 注意: 这里忽略常规的buf和count参数
+             */
+            if (copy_to_user((void __user *)edu_dev->dma_dst_address,
+                             edu_dev->dma_buffer, edu_dev->dma_count)) {
+                printk(KERN_ERR "[%s] DMA GET: Failed to copy_to_user\n",
+                       DRIVER_NAME);
+                return -EFAULT;
+            }
+            /* 记录DMA传输日志 */
+            printk(KERN_INFO "[%s] DMA GET: Content: %s\n", DRIVER_NAME,
+                   (char *)edu_dev->dma_buffer);
+            break;
+        }
+        default:
+            return -EINVAL;
+    }
+
+    /* 更新文件位置指针 */
+    *ppos += count;
+
+    return count;
+}
+```
+
+### 写设备
+
+写设备的操作是通过函数`edu_write`完成的。为了方便对设备的DMA相关寄存器进行操作，驱动提供了一个`SET_DMA`宏，实现如下：
+
+
+```c
+// 第一个参数是要写入的值，第二个参数是寄存器地址
+#define SET_DMA(value64, pos)                                 \
+    do {                                                      \
+        iowrite32((uint32_t)((value64)&0xFFFFFFFF),           \
+                  edu_dev->mmio_base + (pos));                \
+        iowrite32((uint32_t)(((value64) >> 32) & 0xFFFFFFFF), \
+                  edu_dev->mmio_base + (pos) + 4);            \
+    } while (0)
+```
+
+写设备的具体实现过程如下：
+
+```c
+/**
+ * @brief 向EDU设备写入数据
+ * 
+ * @param filp 文件指针，包含设备私有数据
+ * @param buf 用户空间缓冲区指针
+ * @param count 要写入的字节数
+ * @param ppos 文件位置指针
+ * @return ssize_t 成功时返回写入的字节数，失败时返回错误码
+ */
+static ssize_t edu_write(struct file *filp, const char __user *buf,
+                         size_t count, loff_t *ppos) {
+    struct edu_device *edu_dev;
+    uint32_t value32 = 0;
+    uint64_t value64 = 0;
+
+    /**
+     * @brief 获取设备结构体指针
+     * 
+     * 从文件指针filp的private_data字段获取edu_device结构体指针
+     * 该指针在edu_open函数中被设置
+     */
+    edu_dev = filp->private_data;
+
+    /**
+     * @brief 从用户空间读取数据
+     * 
+     * 根据count和ppos的值决定读取32位还是64位数据
+     * - 如果count为4字节，读取32位数据到value32
+     * - 如果count为8字节且ppos >= EDU_DMA_SRC_ADDR，读取64位数据到value64
+     * - 其他情况返回-EINVAL错误
+     */
+    if (count == 4) {
+        if (copy_from_user(&value32, buf, sizeof(value32))) {
+            return -EFAULT;
+        }
+    } else if (count == 8 && *ppos >= EDU_DMA_SRC_ADDR) {
+        if (copy_from_user(&value64, buf, sizeof(value64))) {
+            return -EFAULT;
+        }
+    } else {
+        return -EINVAL;
+    }
+
+    /**
+     * @brief 根据文件位置指针执行不同的写入操作
+     * 
+     * 使用switch语句根据ppos的值执行不同的设备操作
+     */
+    switch (*ppos) {
+        case EDU_FACT_CALC:
+            /**
+             * @brief 阶乘计算
+             * 
+             * 1. 设置complete标志为false，表示计算未完成
+             * 2. 将value32写入设备的EDU_FACT_CALC寄存器
+             */
+            edu_dev->complete = false;
+            iowrite32(value32, edu_dev->mmio_base + EDU_FACT_CALC);
+            break;
+        case EDU_DMA_SRC_ADDR:
+            /**
+             * @brief 设置DMA源地址
+             * 
+             * 根据count的值设置32位或64位的DMA源地址
+             */
+            edu_dev->dma_src_address = count == 4 ? value32 : value64;
+            break;
+        case EDU_DMA_DST_ADDR: {
+            /**
+             * @brief 设置DMA目标地址
+             * 
+             * 根据count的值设置32位或64位的DMA目标地址
+             */
+            edu_dev->dma_dst_address = count == 4 ? value32 : value64;
+            break;
+        }
+        case EDU_DMA_COUNT:
+            /**
+             * @brief 设置DMA传输字节数
+             * 
+             * 根据count的值设置32位或64位的DMA传输字节数
+             */
+            edu_dev->dma_count = count == 4 ? value32 : value64;
+            break;
+        case EDU_DMA_CMD: {
+            void *buffer_addr;
+            dma_addr_t dma_addr;
+            struct device *dev = &edu_dev->pdev->dev;
+            uint64_t cmd = count == 4 ? value32 : value64;
+
+            /**
+             * @brief 设置DMA传输字节数到寄存器
+             */
+            size_t size = edu_dev->dma_count;
+            SET_DMA(size, EDU_DMA_COUNT);
+
+            /**
+             * @brief 准备DMA缓冲区
+             * 
+             * 1. 分配DMA一致性内存
+             * 2. 如果分配失败，打印错误日志并返回-ENOMEM
+             */
+            buffer_addr = dma_alloc_coherent(dev, size, &dma_addr, GFP_KERNEL);
+            if (!buffer_addr) {
+                printk(KERN_ERR
+                       "[%s] DMA_CMD: Failed to allocate memory for dma\n",
+                       DRIVER_NAME);
+                return -ENOMEM;
+            }
+
+            edu_dev->dma_buffer = buffer_addr;
+            edu_dev->dma_direction = cmd & DMA_EDU2RAM;
+            edu_dev->dma_addr = dma_addr;
+
+            if (cmd & DMA_EDU2RAM) {
+                /**
+                 * @brief EDU到RAM的DMA传输
+                 * 
+                 * 1. 检查源地址是否在有效范围内
+                 * 2. 设置DMA源地址和目标地址寄存器
+                 * 3. 打印DMA启动日志
+                 */
+                if (edu_dev->dma_src_address < EDU_BUFFER_ADDRESS ||
+                    edu_dev->dma_src_address + size >=
+                        EDU_BUFFER_ADDRESS + BUFFER_SIZE) {
+                    printk(KERN_ERR "[%s] DMA_CMD: Memory out of bounds\n",
+                           DRIVER_NAME);
+                    dma_free_coherent(dev, size, buffer_addr, dma_addr);
+                    return -EFAULT;
+                }
+                // 设置DMA源地址寄存器
+                SET_DMA(edu_dev->dma_src_address, EDU_DMA_SRC_ADDR);
+                // 设置DMA目标地址寄存器
+                SET_DMA(dma_addr, EDU_DMA_DST_ADDR);
+                printk(KERN_INFO
+                       "[%s] Start DMA: Direction: EDU to RAM, Source Address: "
+                       "0x%llx, Destination Address: 0x%llx, count:%ld\n",
+                       DRIVER_NAME, edu_dev->dma_src_address, dma_addr, size);
+            } else {
+                /**
+                 * @brief RAM到EDU的DMA传输
+                 * 
+                 * 1. 检查目标地址是否在有效范围内
+                 * 2. 从用户空间拷贝数据到DMA缓冲区
+                 * 3. 设置DMA源地址和目标地址寄存器
+                 * 4. 打印DMA启动日志
+                 */
+                if (edu_dev->dma_dst_address < EDU_BUFFER_ADDRESS ||
+                    edu_dev->dma_dst_address + size >=
+                        EDU_BUFFER_ADDRESS + BUFFER_SIZE) {
+                    printk(KERN_ERR "[%s] DMA_CMD: Memory out of bounds\n",
+                           DRIVER_NAME);
+                    dma_free_coherent(dev, size, buffer_addr, dma_addr);
+                    return -EFAULT;
+                }
+                // 从用户态获取数据
+                if (copy_from_user(
+                        buffer_addr,
+                        (const void __user *)edu_dev->dma_src_address,
+                        edu_dev->dma_count)) {
+                    printk(KERN_ERR "[%s] DMA_CMD: Failed to copy_from_user\n",
+                           DRIVER_NAME);
+                    dma_free_coherent(dev, size, buffer_addr, dma_addr);
+                    return -EFAULT;
+                }
+                
+                SET_DMA(dma_addr, EDU_DMA_SRC_ADDR);
+                SET_DMA(edu_dev->dma_dst_address, EDU_DMA_DST_ADDR);
+                printk(KERN_INFO
+                       "[%s] Start DMA: Direction: RAM to EDU, Source Address: "
+                       "0x%llx, Destination Address: 0x%llx, count:%ld, "
+                       "Content: %s\n",
+                       DRIVER_NAME, dma_addr, edu_dev->dma_dst_address, size,
+                       (char *)buffer_addr);
+            }
+
+            /**
+             * @brief 启动DMA传输
+             * 
+             * 设置DMA_CMD寄存器，包含DMA方向和中断标志
+             */
+            SET_DMA(cmd | DMA_START | DMA_IRQ, EDU_DMA_CMD);
+
+            break;
+        }
+        default:
+            /**
+             * @brief 处理无效的文件位置指针
+             * 
+             * 如果ppos不匹配任何已定义的case，返回-EINVAL错误
+             */
+            return -EINVAL;
+    }
+
+    /**
+     * @brief 更新文件位置指针
+     * 
+     * 将ppos增加count，确保下次操作从正确位置开始
+     */
+    *ppos += count;
+
+    /**
+     * @brief 返回实际写入的字节数
+     * 
+     * 返回成功写入的字节数count
+     */
+    return count;
+}
+```
+
+### IRQ处理
+
+EDU设备的中断处理函数如下。在驱动程序初始化时，该函数就会被注册：
+
+```c
+// 注册中断处理函数
+if ((ret = request_irq(pdev->irq, edu_irq_handler, IRQF_SHARED, DRIVER_NAME,
+                        edu_dev)) < 0) {
+    printk(KERN_ERR "[%s] Failed to request IRQ %d\n", DRIVER_NAME,
+            pdev->irq);
+    goto unmap_bar;
+}
+```
+
+一旦设备发来中断信号，就会触发中断处理函数`edu_irq_handler`。
+
+```c
+/**
+ * @brief EDU设备的中断处理函数
+ * 
+ * @param irq 中断号
+ * @param dev_id 设备私有数据指针
+ * @return irqreturn_t 中断处理结果
+ * 
+ * 该函数处理EDU设备产生的两种中断：
+ * 1. 阶乘计算完成中断
+ * 2. DMA传输完成中断
+ */
+static irqreturn_t edu_irq_handler(int irq, void *dev_id) {
+    uint32_t status;
+    struct edu_device *edu_dev = dev_id;
+
+    /**
+     * @brief 检查中断有效性
+     * 
+     * 1. 检查dev_id是否为NULL
+     * 2. 读取中断状态寄存器，检查是否为0
+     * 如果任一条件满足，返回IRQ_NONE表示不是本设备的中断
+     */
+    if (!edu_dev ||
+        (status = ioread32(edu_dev->mmio_base + EDU_IRQ_STATUS)) == 0) {
+        return IRQ_NONE;
+    }
+
+    // 打印中断状态信息
+    printk(KERN_INFO "[%s] Receive interrupt, status: 0x%x\n", DRIVER_NAME,
+           status);
+
+    /**
+     * @brief 唤醒等待队列
+     * 
+     * 设置complete标志为true并唤醒等待队列
+     * 这使得edu_read()函数可以返回正确值
+     */
+    edu_dev->complete = true;
+    wake_up_interruptible(&edu_dev->wait_queue);
+
+    /**
+     * @brief 处理DMA中断
+     * 
+     * 如果user_pid已设置且中断状态为DMA_IRQ_VALUE，
+     * 则处理DMA传输完成中断
+     */
+    if (edu_dev->user_pid && status == DMA_IRQ_VALUE) {
+        struct task_struct *task;
+        struct kernel_siginfo info;
+
+        // 初始化信号信息结构体
+        memset(&info, 0, sizeof(struct kernel_siginfo));
+        info.si_signo = SIGUSR1;  // 信号类型
+        info.si_code = SI_QUEUE;  // 信号代码
+        // 设置信号值，指示DMA传输方向
+        info.si_int =
+            edu_dev->dma_direction & DMA_EDU2RAM ? DMA_EDU2RAM : DMA_RAM2EDU;
+
+        /**
+         * @brief 发送信号给用户进程
+         * 
+         * 1. 获取用户进程的task_struct
+         * 2. 发送SIGUSR1信号通知DMA传输完成
+         * 3. 释放task_struct引用
+         */
+        task = get_pid_task(edu_dev->user_pid, PIDTYPE_PID);
+        if (task) {
+            if (send_sig_info(SIGUSR1, &info, task) < 0) {
+                printk(KERN_ERR
+                       "[%s] DMA IRQ: Failed to send signal to pid %d\n",
+                       DRIVER_NAME, task_pid_nr(task));
+            }
+            put_task_struct(task);
+        }
+        // 调度DMA缓冲区释放工作
+        schedule_work(&edu_dev->free_dma_work);
+    }
+
+    /**
+     * @brief 确认中断
+     * 
+     * 将中断状态写回中断确认寄存器
+     */
+    iowrite32(status, edu_dev->mmio_base + EDU_IRQ_ACK);
+
+    // 返回IRQ_HANDLED表示中断已处理
+    return IRQ_HANDLED;
+}
+```
 
 ## 上手实践
 
+### 用户态程序编写
+
+我们需要在Guest OS中编写用户态程序，用于测试驱动。具体代码如下：
+
+```c
+/**
+ * @file 测试EDU设备功能的用户空间程序
+ * 
+ * 该程序测试EDU设备的两个主要功能：
+ * 1. 阶乘计算功能
+ * 2. DMA传输功能（包括RAM到EDU和EDU到RAM两种方向）
+ */
+
+#include <errno.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+// 设备文件路径
+#define EDU_DEVICE "/dev/edu"
+
+// 设备寄存器偏移量定义
+#define EDU_FACT_CALC 0x08       // 阶乘计算寄存器
+#define EDU_DMA_SRC_ADDRESS 0x80 // DMA源地址寄存器
+#define EDU_DMA_DST_ADDRESS 0x88 // DMA目标地址寄存器
+#define EDU_DMA_COUNT 0x90       // DMA传输字节数寄存器
+#define EDU_DMA_CMD 0x98         // DMA命令寄存器
+
+#define EDU_DMA_GET 0x1234       // DMA数据获取地址
+
+// DMA方向定义
+#define EDU_DMA_RAM2EDU 0x0      // RAM到EDU方向
+#define EDU_DMA_EDU2RAM 0x02     // EDU到RAM方向
+
+// EDU设备缓冲区基地址
+#define EDU_BUFFER_ADDRESS 0x40000
+
+// 全局变量
+int fd;                         // 设备文件描述符
+char read_buffer[100];          // 读取缓冲区
+const char *write_buffer =      // 写入测试数据
+    "This is a content to test QEMU EDU device DMA function.";
+
+/**
+ * @brief SIGUSR1信号处理函数
+ * 
+ * @param signum 信号编号
+ * @param info 信号信息结构体
+ * @param context 信号上下文
+ * 
+ * 当DMA传输完成时，EDU设备会发送SIGUSR1信号。
+ * 该函数检查DMA传输方向，如果是EDU到RAM方向，则验证传输的数据是否正确。
+ */
+void signal_handler(int signum, siginfo_t *info, void *context) {
+    printf("Received SIGUSR1, DMA transfer complete!\n");
+
+    // 检查是否是EDU到RAM方向的DMA传输
+    if (info->si_int == EDU_DMA_EDU2RAM) {
+        int read_value = 0;
+        // 从EDU_DMA_GET地址读取数据
+        if (pread(fd, &read_value, sizeof(read_value), EDU_DMA_GET) ==
+            sizeof(read_value)) {
+            // 比较读取的数据和原始写入数据
+            if (strcmp(write_buffer, read_buffer) == 0) {
+                printf("DMA test pass!\n");
+            } else {
+                printf("DMA test failed!\n");
+            }
+        } else {
+            printf("Failed to read at EDU_DMA_GET\n");
+        }
+    }
+}
+
+/**
+ * @brief 主函数
+ * 
+ * 测试EDU设备的阶乘计算和DMA传输功能
+ * 
+ * @return int 程序退出状态码
+ */
+int main() {
+    int ret;
+    uint32_t read_value, write_value;
+    ssize_t bytes_write;
+    uintptr_t buffer_address;
+    
+    // 打开EDU设备文件
+    fd = open(EDU_DEVICE, O_RDWR);
+    if (fd < 0) {
+        printf("Failed to open the device");
+        return errno;
+    }
+
+    // ============== 测试阶乘计算功能 =============
+
+    // 写入阶乘计算值
+    write_value = 12;
+    if ((bytes_write = pwrite(fd, &write_value, sizeof(write_value),
+                              EDU_FACT_CALC)) == sizeof(write_value)) {
+        printf("Write Value: %d, Write Size: %zd\n", write_value, bytes_write);
+    } else {
+        printf("Failed to write the device");
+        close(fd);
+        return errno;
+    }
+
+    // 读取阶乘计算结果
+    if (pread(fd, &read_value, sizeof(read_value), EDU_FACT_CALC) ==
+        sizeof(read_value)) {
+        printf("Result: %d\n", read_value);
+    } else {
+        printf("Failed to read the device");
+        close(fd);
+        return errno;
+    }
+
+    // ============== 注册SIGUSR1信号处理函数 =============
+    
+    struct sigaction sa;
+    sa.sa_sigaction = signal_handler;
+    sa.sa_flags = SA_SIGINFO;  // 使用sa_sigaction而不是sa_handler
+    sigemptyset(&sa.sa_mask);  // 初始化信号掩码
+
+    if (sigaction(SIGUSR1, &sa, NULL) == -1) {
+        perror("Failed to register SIGUSR1 handler");
+        close(fd);
+        return errno;
+    }
+
+    // ============== 测试DMA: RAM到EDU =============
+
+    // 设置DMA源地址（用户空间缓冲区地址）
+    buffer_address = (uintptr_t)write_buffer;
+    if (pwrite(fd, &buffer_address, sizeof(buffer_address),
+               EDU_DMA_SRC_ADDRESS) != sizeof(buffer_address)) {
+        printf("Failed to set DMA source address");
+        return errno;
+    }
+
+    // 设置DMA目标地址（设备缓冲区地址）
+    write_value = EDU_BUFFER_ADDRESS;
+    if (pwrite(fd, &write_value, sizeof(write_value), EDU_DMA_DST_ADDRESS) !=
+        sizeof(write_value)) {
+        printf("Failed to set DMA destination address");
+        return errno;
+    }
+
+    // 设置DMA传输字节数（包括字符串结束符'\0'）
+    write_value = strlen(write_buffer) + 1;
+    if (pwrite(fd, &write_value, sizeof(write_value), EDU_DMA_COUNT) !=
+        sizeof(write_value)) {
+        printf("Failed to set DMA count");
+        return errno;
+    }
+
+    // 启动RAM到EDU方向的DMA传输
+    write_value = EDU_DMA_RAM2EDU;
+    if (pwrite(fd, &write_value, sizeof(write_value), EDU_DMA_CMD) !=
+        sizeof(write_value)) {
+        printf("Failed to start DMA transfer");
+        return errno;
+    }
+
+    // 等待DMA完成信号
+    printf("Wait for signal\n");
+    pause();
+
+    // ============== 测试DMA: EDU到RAM =============
+
+    // 设置DMA源地址（设备缓冲区地址）
+    write_value = EDU_BUFFER_ADDRESS;
+    if (pwrite(fd, &write_value, sizeof(write_value), EDU_DMA_SRC_ADDRESS) !=
+        sizeof(write_value)) {
+        printf("Failed to set DMA source address");
+        return errno;
+    }
+
+    // 设置DMA目标地址（用户空间缓冲区地址）
+    buffer_address = (uintptr_t)read_buffer;
+    if (pwrite(fd, &buffer_address, sizeof(buffer_address),
+               EDU_DMA_DST_ADDRESS) != sizeof(buffer_address)) {
+        printf("Failed to set DMA destination address");
+        return errno;
+    }
+
+    // 不需要重新设置传输字节数，与之前相同
+
+    // 启动EDU到RAM方向的DMA传输
+    write_value = EDU_DMA_EDU2RAM;
+    if (pwrite(fd, &write_value, sizeof(write_value), EDU_DMA_CMD) !=
+        sizeof(write_value)) {
+        printf("Failed to start DMA transfer");
+        return errno;
+    }
+
+    // 等待DMA完成信号
+    printf("Wait for signal\n");
+    pause();
+
+    // 关闭设备文件
+    close(fd);
+
+    return 0;
+}
+```
+
 ### 环境配置
+
+Linux内核的编译和运行可以参考{ref}`Linux 内核的编译与运行 <linux-kernel-compile-run>`，我们使用以下命令启动qemu：
+
+```console
+export KERNEL=/path/to/linux/bzImage
+export IMAGE=/path/to/images
+
+sudo -E qemu-system-x86_64 \
+	-m 2G \
+	-smp 1 \
+	-kernel $KERNEL \
+	-append "console=ttyS0 root=/dev/sda earlyprintk=serial net.ifnames=0 rw" \
+	-drive file=$IMAGE,format=qcow2 \
+	-net user,host=10.0.2.10,hostfwd=tcp:127.0.0.1:10021-:22 \
+	-net nic,model=e1000 \
+	-virtfs local,id=test_dev,path=share,security_model=none,mount_tag=test_mount \
+	-enable-kvm \
+    -device edu \
+	-nographic \
+	-pidfile vm.pid \
+	2>&1 | tee vm.log
+```
+
+启动QEMU之后，我们需要编译并加载驱动。首先我们需要建立Guest OS和Host OS之间的目录映射
+
+```console
+mkdir /root/share
+mount -t 9p -o trans=virtio,version=9p2000.L test_mount /root/share
+```
+
+`share`中存放了你的Linux源码和驱动源码
+
+首先安装一下`modules` 
+
+```console
+make modules_install
+```
+执行完命令后，会自动在`/lib/modules`下创建一个目录，以我的内核版本为例，目录为`/lib/modules/6.1.0`。其中的`/lib/modules/6.1.0/build`就指向源码目录
+
+接下来，我们编译自己写的EDU设备驱动程序，你可以使用以下的代码，也可以直接使用[源码仓库](https://github.com/jklincn/qemu_edu_driver)中的Makefile
+
+```console
+make -C /lib/modules/6.10.0/build M=/root/share/qemu_edu_driver modules
+```
+
+编译完成后，可以在目录`/root/share/qemu_edu_driver`下找到`edu.ko`文件，接着执行以下命令，便可将EDU设备驱动加载到内核中
+
+```console
+insmod /root/share/qemu_edu_driver/edu.ko
+```
+
+然后编译用户态的程序`user_test.c`
+
+```console
+gcc -o user_test user_test.c
+```
+
+最后，我们运行用户态的程序`user_test`
+
+```console
+./user_test
+```
+
+### 实验效果
+
+最终执行效果如下，我们计算了12的阶乘：
+
+![](1.png)
+
+## 附件
+
+- 实验源码：https://github.com/jklincn/qemu_edu_driver
+- EDU设备驱动：[qemu_edu_driver.c](./src/qemu_edu_driver.c)。原本的`qemu_edu_driver.c`中存在部分错误，在较新版本的内核中可能会编译失败，所以我经过修改，修复了其中的错误，目前能够成功编译，但仍旧存在一个Use After Free的漏洞，后续修复
+- 用户态程序：[user_test.c](./src/user_test.c)
 
 ## 参考
 
