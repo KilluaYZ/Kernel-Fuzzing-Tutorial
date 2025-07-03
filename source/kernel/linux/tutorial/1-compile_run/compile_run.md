@@ -1,8 +1,5 @@
----
-title: Linux 内核的编译与运行
-date: 2024-12-27 14:44:00
-tags: [linux, kvm, qemu]
----
+(linux-kernel-compile-run)=
+
 # Linux 内核的编译与运行
 
 ## 获取源码
@@ -38,7 +35,7 @@ sudo pacman -S base-devel bc coreutils cpio gettext initramfs kmod libelf ncurse
 对于Ubuntu，安装以下依赖：
 
 ``` bash
-sudo apt install bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl pahole perl-base rsync tar xz-utils 
+sudo apt install bc binutils bison dwarves flex gcc git gnupg2 gzip libelf-dev libncurses5-dev libssl-dev make openssl perl-base rsync tar xz-utils libncursesw5-dev
 ```
 
 ### 设置内核编译选项

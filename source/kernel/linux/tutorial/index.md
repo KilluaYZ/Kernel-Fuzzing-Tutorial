@@ -18,4 +18,5 @@
 11-xarray/xarray.md
 12-globalmem_driver/globalmem_driver.md
 13-edu-device-driver/13-edu-device-driver.md
+14-compile_with_llvm/14-compile_with_llvm.md
 ```
