@@ -14,7 +14,7 @@ myst:
 :link-type: ref
 :text-align: center
 
-All the things about kernel
+有关 Linux 内核的知识
 :::
 
 :::{grid-item-card} Fuzzer
@@ -22,7 +22,7 @@ All the things about kernel
 :link-type: ref
 :text-align: center
 
-SOTA Fuzzers
+最新的 Kernel Fuzzers
 :::
 ::::
 
@@ -32,7 +32,7 @@ SOTA Fuzzers
 :link-type: ref
 :text-align: center
 
-Latest papers about kernel fuzzing
+Kernel Fuzzing 相关最新文档
 :::
 
 :::{grid-item-card} Nix
@@ -40,7 +40,7 @@ Latest papers about kernel fuzzing
 :link-type: ref
 :text-align: center
 
-Official document about nix
+Nix 官方文档
 :::
 ::::
 
@@ -50,7 +50,7 @@ Official document about nix
 :link-type: ref
 :text-align: center
 
-Knowleges about simulator such as qemu
+虚拟机相关知识（例如 QEMU）
 :::
 
 :::{grid-item-card} Wiki
@@ -58,7 +58,17 @@ Knowleges about simulator such as qemu
 :link-type: ref
 :text-align: center
 
-Simple wiki~
+各种踩坑合集～
+:::
+::::
+
+::::{grid} 2
+:::{grid-item-card} K8S
+:link: kubernets
+:link-type: ref
+:text-align: center
+
+Kubernets(K8S) 相关知识
 :::
 ::::
 
@@ -77,5 +87,6 @@ fuzzer/index.md
 simulator/index.md
 paper/index.md
 nix/index.md
+kubernets/index.md
 wiki/index.md
 ```
