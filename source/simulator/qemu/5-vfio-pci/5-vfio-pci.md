@@ -139,7 +139,7 @@ $ lspci -nn | grep -iE "1002"
 65:00.0 VGA compatible controller [0300]: Advanced Micro Devices, Inc. [AMD/ATI] Oland [Radeon HD 8570 / R5 430 OEM / R7 240/340 / Radeon 520 OEM] [1002:6611] (rev 87)
 65:00.1 Audio device [0403]: Advanced Micro Devices, Inc. [AMD/ATI] Oland/Hainan/Cape Verde/Pitcairn HDMI Audio [Radeon HD 7000 Series] [1002:aab0]
 ```
-可以看到，我们的设备的 PCI 地址是`65:00.0`和`65:00.1`
+可以看到，我们的设备的 PCI 地址是`65:00.0`和`65:00.1`，但是我们只用把`65:00.0`添加到参数中就可以
 
 现在我们配置好直连的 amdgpu 在 qemu 的视角下，就是一个vfio-pci设备，所以我们可以通过以下命令启动：
 
@@ -153,7 +153,6 @@ $ qemu-system-x86_64 \
 	-net user,host=10.0.2.10,hostfwd=tcp:127.0.0.1:10021-:22 \
 	-net nic,model=e1000 \
         -device vfio-pci,host=65:00.0,multifunction=on \
-        -device vfio-pci,host=65:00.1 \
 	-enable-kvm \
 	-nographic \
 	-pidfile vm.pid \
